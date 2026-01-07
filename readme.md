@@ -1,26 +1,26 @@
-#Create New Project With MVC Patterb
+# Create New Project With MVC Patterb
 
 ```
 dotnet new mvc -n DotnetSkeletonApp
 ```
 
-#File Asset
+# File Asset
 
 - Folder wwwroot untuk meletakkan file-file statis
 
-#Folder Resources
+# Folder Resources
 
 - Folder untuk menyimpan file lang
 
-#Folder Extensions
+# Folder Extensions
 
 - Folder untuk menyimpan file services agar program.cs tidak banyak
 
-#Folder Authorization
+# Folder Authorization
 
 - Untuk menyimpan file yang berkaitan dengan authorization user
 
-#Kegunaan package yang dipakai
+# Kegunaan package yang dipakai
 
 ```
 <PackageReference Include="Hangfire" Version="1.8.21" /> -> Background job processing tanpa Windows Service / Cron manual
