@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentCulture.Name">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @* <meta name="csrf-token" content=""> *@
+    <title>@ViewData["Title"] - Dotnet Skeleton App</title>
+    <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/css/vendors.bundle.css">
+    <link id="appbundle" rel="stylesheet" media="screen, print" href="~/css/app.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/css/notifications/toastr/toastr.css">
+    <link id="mytheme" rel="stylesheet" media="screen, print" href="~/css/themes/cust-theme-6.css">
+    <link id="myskin" rel="stylesheet" media="screen, print" href="~/css/skins/skin-master.css">
+
+    @await RenderSectionAsync("Styles", required: false)
+
+    <link rel="shortcut icon" href="{{ $faviconPath }}" type="image/x-icon">
+</head>
+
+<body class="mod-bg-1">
+    <div class="page-wrapper">
+        <div class="page-inner">
+            @await Html.PartialAsync("_Navigation")
+            <div class="page-content-wrapper">
+                @await Html.PartialAsync("_Header")
+                <main id="js-page-content" role="main" class="page-content">
+                    @RenderBody()
+                </main>
+
+                @* <div class="modal fade example-modal-centered-transparent" id="modal-logout" tabindex="-1" role="dialog"
+                    aria-hidden="true">
+
+                    <div class="modal-dialog modal-dialog-centered modal-transparent" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title text-white">
+                                    Informasi !
+                                </h4>
+                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-white">Ingin Keluar Aplikasi ?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <form action="" method="POST">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Ya, Keluar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div> *@
+                <!-- this overlay is activated only when mobile menu is triggered -->
+                <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div>
+                <!-- BEGIN Page Footer -->
+                <footer class="page-footer" role="contentinfo">
+                    <div class="d-flex align-items-center flex-1 text-muted">
+                        <span class="hidden-md-down fw-700">Copyright &copy; 2026. Dotnet Skeleton App.</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="badge badge-success">
+                            Basic
+                        </span>
+                        <em>Version: 1.0.0</em>
+                    </div>
+                </footer>
+
+                <p id="js-color-profile" class="d-none">
+                    <span class="color-primary-50"></span>
+                    <span class="color-primary-100"></span>
+                    <span class="color-primary-200"></span>
+                    <span class="color-primary-300"></span>
+                    <span class="color-primary-400"></span>
+                    <span class="color-primary-500"></span>
+                    <span class="color-primary-600"></span>
+                    <span class="color-primary-700"></span>
+                    <span class="color-primary-800"></span>
+                    <span class="color-primary-900"></span>
+                    <span class="color-info-50"></span>
+                    <span class="color-info-100"></span>
+                    <span class="color-info-200"></span>
+                    <span class="color-info-300"></span>
+                    <span class="color-info-400"></span>
+                    <span class="color-info-500"></span>
+                    <span class="color-info-600"></span>
+                    <span class="color-info-700"></span>
+                    <span class="color-info-800"></span>
+                    <span class="color-info-900"></span>
+                    <span class="color-danger-50"></span>
+                    <span class="color-danger-100"></span>
+                    <span class="color-danger-200"></span>
+                    <span class="color-danger-300"></span>
+                    <span class="color-danger-400"></span>
+                    <span class="color-danger-500"></span>
+                    <span class="color-danger-600"></span>
+                    <span class="color-danger-700"></span>
+                    <span class="color-danger-800"></span>
+                    <span class="color-danger-900"></span>
+                    <span class="color-warning-50"></span>
+                    <span class="color-warning-100"></span>
+                    <span class="color-warning-200"></span>
+                    <span class="color-warning-300"></span>
+                    <span class="color-warning-400"></span>
+                    <span class="color-warning-500"></span>
+                    <span class="color-warning-600"></span>
+                    <span class="color-warning-700"></span>
+                    <span class="color-warning-800"></span>
+                    <span class="color-warning-900"></span>
+                    <span class="color-success-50"></span>
+                    <span class="color-success-100"></span>
+                    <span class="color-success-200"></span>
+                    <span class="color-success-300"></span>
+                    <span class="color-success-400"></span>
+                    <span class="color-success-500"></span>
+                    <span class="color-success-600"></span>
+                    <span class="color-success-700"></span>
+                    <span class="color-success-800"></span>
+                    <span class="color-success-900"></span>
+                    <span class="color-fusion-50"></span>
+                    <span class="color-fusion-100"></span>
+                    <span class="color-fusion-200"></span>
+                    <span class="color-fusion-300"></span>
+                    <span class="color-fusion-400"></span>
+                    <span class="color-fusion-500"></span>
+                    <span class="color-fusion-600"></span>
+                    <span class="color-fusion-700"></span>
+                    <span class="color-fusion-800"></span>
+                    <span class="color-fusion-900"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+    <script src="~/js/vendors.bundle.js"></script>
+    <script src="~/js/app.bundle.js"></script>
+    <script src="~/js/notifications/toastr/toastr.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="{{ asset('') }}/helpers/js/notification-messages.js"></script>
+
+    <script>
+        'use strict';
+
+        var htmlRoot = document.getElementsByTagName('HTML')[0],
+            classHolder = document.getElementsByTagName('BODY')[0],
+            head = document.getElementsByTagName('HEAD')[0],
+            themeID = document.getElementById('mytheme'),
+            filterClass = function (t, e) {
+                return String(t).split(/[^\w-]+/).filter(function (t) {
+                    return e.test(t)
+                }).join(' ')
+            },
+
+            loadSettings = function () {
+                var t = localStorage.getItem('themeSettings') || '',
+                    e = t ? JSON.parse(t) :
+                        {};
+                return Object.assign(
+                    {
+                        htmlRoot: '',
+                        classHolder: '',
+                        themeURL: ''
+                    }, e)
+            },
+            /** 
+             * Save to localstorage 
+             **/
+            saveSettings = function () {
+                themeSettings.htmlRoot = filterClass(htmlRoot.className, /^(root)-/i),
+                    themeSettings.classHolder = filterClass(classHolder.className, /^(nav|header|footer|mod|display)-/i),
+                    themeSettings.themeURL = themeID.getAttribute("href") ? themeID.getAttribute("href") : "",
+                    localStorage.setItem("themeSettings", JSON.stringify(themeSettings))
+            },
+            /** 
+             * Reset settings
+             **/
+            resetSettings = function () {
+                localStorage.setItem("themeSettings", "")
+            },
+            themeSettings = loadSettings();
+
+        themeID || ((themeID = document.createElement('link')).id = 'mytheme',
+            themeID.rel = 'stylesheet',
+            themeID.href = '',
+            head.appendChild(themeID),
+            themeID = document.getElementById('mytheme')),
+            themeSettings.htmlRoot && (htmlRoot.className = themeSettings.htmlRoot),
+            themeSettings.classHolder && (classHolder.className = themeSettings.classHolder),
+            themeSettings.themeURL && themeID.setAttribute("href", themeSettings.themeURL);
+    </script>
+</body>
+
+</html>
