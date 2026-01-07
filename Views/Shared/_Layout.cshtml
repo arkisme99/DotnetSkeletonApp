@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @* <meta name="csrf-token" content=""> *@
     <title>@ViewData["Title"] - Dotnet Skeleton App</title>
-    <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/css/vendors.bundle.css">
-    <link id="appbundle" rel="stylesheet" media="screen, print" href="~/css/app.bundle.css">
-    <link rel="stylesheet" media="screen, print" href="~/css/notifications/toastr/toastr.css">
-    <link id="mytheme" rel="stylesheet" media="screen, print" href="~/css/themes/cust-theme-6.css">
-    <link id="myskin" rel="stylesheet" media="screen, print" href="~/css/skins/skin-master.css">
+    <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/sources/css/vendors.bundle.css">
+    <link id="appbundle" rel="stylesheet" media="screen, print" href="~/sources/css/app.bundle.css">
+    <link rel="stylesheet" media="screen, print" href="~/sources/css/notifications/toastr/toastr.css">
+    <link id="mytheme" rel="stylesheet" media="screen, print" href="~/sources/css/themes/cust-theme-6.css">
+    <link id="myskin" rel="stylesheet" media="screen, print" href="~/sources/css/skins/skin-master.css">
 
     @await RenderSectionAsync("Styles", required: false)
 
-    <link rel="shortcut icon" href="{{ $faviconPath }}" type="image/x-icon">
+    <link rel="shortcut icon" href="~/sources/img/favicon/fav.png" type="image/x-icon">
 </head>
 
 <body class="mod-bg-1">
@@ -134,11 +134,11 @@
         </div>
     </div>
     <!-- jQuery -->
-    <script src="~/js/vendors.bundle.js"></script>
-    <script src="~/js/app.bundle.js"></script>
-    <script src="~/js/notifications/toastr/toastr.js"></script>
+    <script src="~/sources/js/vendors.bundle.js"></script>
+    <script src="~/sources/js/app.bundle.js"></script>
+    <script src="~/sources/js/notifications/toastr/toastr.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    <script src="{{ asset('') }}/helpers/js/notification-messages.js"></script>
+    <script src="~/helpers/js/notification-messages.js"></script>
 
     <script>
         'use strict';
