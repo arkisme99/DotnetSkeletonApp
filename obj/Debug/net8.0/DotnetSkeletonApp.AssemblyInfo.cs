@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DotnetSkeletonApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da3f67b82b8ca43968f34377773ed10ed915dbb4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+01c97465a8f0ce47bd86cb3669a686b1342bb19f")]
 [assembly: System.Reflection.AssemblyProductAttribute("DotnetSkeletonApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DotnetSkeletonApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
