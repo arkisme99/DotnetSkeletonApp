@@ -1,0 +1,52 @@
+@using Microsoft.AspNetCore.Html
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    Layout = "_LayoutGuest";
+    ViewData["Title"] = "Login Page";
+
+}
+
+<form asp-action="Login" method="post" id="formProccess">
+
+    <label for="email">@Localizer["Email"]</label>
+    <div class="input-group mb-3 has-validation">
+        <input type="email" class="form-control" placeholder="@Localizer["Enter your Email"]" name="email" id="email"
+            autofocus required>
+        <div class="input-group-append">
+            <span class="input-group-text">
+                <span class="fal fa-envelope"></span>
+            </span>
+        </div>
+        <div class="invalid-feedback">No, you missed this one.</div>
+    </div>
+
+    <label for="password">@Localizer["Password"]</label>
+    <div class="input-group mb-3 has-validation">
+        <input type="password" class="form-control" placeholder="@Localizer["Enter your Password"]" name="password"
+            id="password" required>
+        <div class="input-group-append">
+            <span class="input-group-text">
+                <span class="show-password-toggle fal fa-eye" data-target="#password"></span>
+            </span>
+        </div>
+        <div class="invalid-feedback">No, you missed this one.</div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <input type="checkbox" name="remember" id="remember_me">
+            <label for="remember_me">@Localizer["Remember me"]</label>
+        </div>
+        <!-- /.col -->
+        <div class="col-6">
+            <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">@Localizer["Login"]</button>
+        </div>
+        <!-- /.col -->
+    </div>
+</form>
+
+<p class="text-center text-muted small mb-1">
+    <strong>Plan:</strong> Basic &ensp; | &ensp; <em>Version: 1.0.0</em>
+</p>

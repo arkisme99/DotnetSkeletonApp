@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DotnetSkeleteonApp.Services;
+using DotnetSkeletonApp.Services;
 
-namespace DotnetSkeleteonApp.Extensions
+namespace DotnetSkeletonApp.Extensions
 {
     public static class ServiceExtensions
     {
@@ -12,7 +12,7 @@ namespace DotnetSkeleteonApp.Extensions
         {
             // services.AddScoped<IProductService, ProductService>();
             // services.AddScoped<IAuthService, AuthService>();
-            // services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<EmailService>();
             // services.AddScoped<IRoleService, RoleService>();
             // services.AddScoped<IUserService, UserService>();
             // services.AddScoped<IActivityLogService, ActivityLogService>();

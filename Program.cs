@@ -1,5 +1,5 @@
-using DotnetSkeleteonApp.Extensions;
 using DotnetSkeletonApp.Extensions;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.MySql;
 
-namespace DotnetTestingWebApp.Extensions
+namespace DotnetSkeletonApp.Extensions
 {
     public static class HangfireExtensions
     {
