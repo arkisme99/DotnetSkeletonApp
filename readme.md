@@ -8,6 +8,18 @@ dotnet new mvc -n DotnetSkeletonApp
 
 - Folder wwwroot untuk meletakkan file-file statis
 
+#Folder Resources
+
+- Folder untuk menyimpan file lang
+
+#Folder Extensions
+
+- Folder untuk menyimpan file services agar program.cs tidak banyak
+
+#Folder Authorization
+
+- Untuk menyimpan file yang berkaitan dengan authorization user
+
 #Kegunaan package yang dipakai
 
 ```
