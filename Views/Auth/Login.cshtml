@@ -1,3 +1,4 @@
+@using DotnetSkeletonApp.Models.ViewModels
 @using Microsoft.AspNetCore.Html
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> Localizer
@@ -6,33 +7,33 @@
     Layout = "_LayoutGuest";
     ViewData["Title"] = "Login Page";
 
+    var inputGroupEmail = new InputGroupViewModel
+    {
+        Label = @Localizer["Youre Email"],
+        Name = "email",
+        Id = "email",
+        PlaceHolder = @Localizer["Enter your Email"],
+        Attributes = "autofocus required",
+        Icon = "fal fa-envelope"
+    };
+
+    var inputGroupPassword = new InputGroupViewModel
+    {
+        Label = @Localizer["Youre Password"],
+        Name = "password",
+        Id = "password",
+        PlaceHolder = @Localizer["Enter your Password"],
+        Attributes = "required",
+        Icon = "show-password-toggle fal fa-eye",
+        DataTargetIcon = "#password"
+    };
+
 }
 
 <form asp-action="Login" method="post" id="formProccess">
 
-    <label for="email">@Localizer["Email"]</label>
-    <div class="input-group mb-3 has-validation">
-        <input type="email" class="form-control" placeholder="@Localizer["Enter your Email"]" name="email" id="email"
-            autofocus required>
-        <div class="input-group-append">
-            <span class="input-group-text">
-                <span class="fal fa-envelope"></span>
-            </span>
-        </div>
-        <div class="invalid-feedback">No, you missed this one.</div>
-    </div>
-
-    <label for="password">@Localizer["Password"]</label>
-    <div class="input-group mb-3 has-validation">
-        <input type="password" class="form-control" placeholder="@Localizer["Enter your Password"]" name="password"
-            id="password" required>
-        <div class="input-group-append">
-            <span class="input-group-text">
-                <span class="show-password-toggle fal fa-eye" data-target="#password"></span>
-            </span>
-        </div>
-        <div class="invalid-feedback">No, you missed this one.</div>
-    </div>
+    @await Html.PartialAsync("Components/_InputGroup", inputGroupEmail)
+    @await Html.PartialAsync("Components/_InputGroup", inputGroupPassword)
 
     <div class="row">
         <div class="col-6">
@@ -50,3 +51,48 @@
 <p class="text-center text-muted small mb-1">
     <strong>Plan:</strong> Basic &ensp; | &ensp; <em>Version: 1.0.0</em>
 </p>
+
+@section Scripts {
+    <script src="~/sources/plugins/jquery-validation/jquery.validate.min.js"></script>
+    @* <script src="https://www.google.com/recaptcha/api.js?render={{ env('CAPTCHA_SITEKEY') }}"></script> *@
+    <script src="~/helpers/js/showpassword.js"></script>
+    <script>
+        $(function () {
+            $('#formProccess').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8
+                    },
+                },
+                messages: {
+                    email: {
+                        required: "Please enter a email address",
+                        email: "Please enter a valid email address"
+                    },
+                    password: {
+                        required: "Please provide a password",
+                        minlength: "Your password must be at least 8 characters long"
+                    },
+                },
+                errorElement: 'span',
+                errorPlacement: function (error, element) {
+                    const feedbackEl = element.closest('.input-group').find('.invalid-feedback');
+                    // Isi teks error ke dalam span yang sudah ada
+                    feedbackEl.text(error.text()).addClass('d-block');
+                },
+                highlight: function (element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                    $(element).closest('.input-group').find('.invalid-feedback').removeClass('d-block').empty();
+                }
+            });
+        });
+    </script>
+}

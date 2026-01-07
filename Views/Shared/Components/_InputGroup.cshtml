@@ -1,0 +1,25 @@
+@model InputGroupViewModel
+@using DotnetSkeletonApp.Models.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+
+@if (Model.Label != null)
+{
+    <label for="@Model.Id">@Model.Label</label>
+}
+
+<div class="input-group mb-3 has-validation">
+    <input class="form-control @(Model.AddNewClass ?? "")" placeholder="@Model.PlaceHolder" name="@Model.Name"
+        id="@Model.Id" @Html.Raw(Model.Attributes ?? "")>
+    <div class="input-group-append">
+        <span class="input-group-text">
+            @{
+                var iconClass = Model.Icon?.ToString() ?? "";
+                var dataTargetIcon = Model.DataTargetIcon?.ToString() ?? "";
+            }
+            <span class="@iconClass" @(string.IsNullOrEmpty(dataTargetIcon) ? "" :
+                                                     $"data-target={dataTargetIcon}")></span>
+        </span>
+    </div>
+    <div class="invalid-feedback">@Localizer["No, you missed this one"].</div>
+</div>
