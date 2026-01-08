@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotnetSkeletonApp.Helpers.Authorization;
 using DotnetSkeletonApp.Services;
 using DotnetSkeletonApp.Services.Recaptcha;
 
@@ -15,6 +16,7 @@ namespace DotnetSkeletonApp.Extensions
             services.AddScoped<RecaptchaServices>();
             services.AddScoped<ActivityLogService>();
             services.AddScoped<AuthService>();
+            services.AddScoped<RedirectIfAuthenticated>();
             // services.AddScoped<IRoleService, RoleService>();
             // services.AddScoped<IUserService, UserService>();
             // services.AddScoped<IActivityLogService, ActivityLogService>();

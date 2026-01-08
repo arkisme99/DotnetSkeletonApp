@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using DotnetSkeletonApp.Helpers.Authorization;
 using DotnetSkeletonApp.Services;
 using DotnetSkeletonApp.Services.Recaptcha;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Localization;
 
 namespace DotnetSkeletonApp.Controllers
 {
+    [ServiceFilter(typeof(RedirectIfAuthenticated))]
     public class AuthController(
         IConfiguration _config,
         RecaptchaServices _recaptchaService,
@@ -64,11 +66,11 @@ namespace DotnetSkeletonApp.Controllers
             return RedirectToAction("Login");
         } */
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        /* [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View("Error");
-        }
+        } */
 
     }
 }
