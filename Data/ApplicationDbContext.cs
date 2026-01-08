@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using DotnetSkeletonApp.Models;
 using DotnetSkeletonApp.Models.UserModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +13,19 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DotnetSkeletonApp.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public class ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        IHttpContextAccessor? _httpContextAccessor
+        )
         : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
     {
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<ApplicationRolePermission> RolePermissions { get; set; }
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
 
-        /* public DbSet<ActivityLog> ActivityLogs { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
+        // public DbSet<Notification> Notifications { get; set; }
 
 
         public override Task<int> SaveChangesAsync(
@@ -97,14 +101,14 @@ namespace DotnetSkeletonApp.Data
                 ActivityLogs.AddRange(logs);
             }
         }
-        
+
 
         private static string GetPrimaryKey(EntityEntry entry)
         {
             // ArgumentNullException.ThrowIfNull(entry);
             var key = entry.Properties.FirstOrDefault(p => p.Metadata.IsPrimaryKey());
             return key?.CurrentValue?.ToString() ?? "";
-        } */
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

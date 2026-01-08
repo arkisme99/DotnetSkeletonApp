@@ -14,7 +14,7 @@ builder.Services
     .AddLocalizationSupport()
     .AddAppServices();
 
-// builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpContextAccessor();
 // Routing lowercase
 builder.Services.AddSignalR();
 builder.Services.AddRouting(options =>
