@@ -33,8 +33,8 @@ namespace DotnetSkeletonApp.Services.Recaptcha
             var json = await response.Content.ReadAsStringAsync();
 
             _logger.LogInformation("Verify Recaptcha Response: {Json}", json);
-            _logger.LogInformation("Secret Key: {secretKey}", secretKey);
-            _logger.LogInformation("Recaptcha Response: {recaptchaResponse}", recaptchaResponse);
+            // _logger.LogInformation("Secret Key: {secretKey}", secretKey);
+            // _logger.LogInformation("Recaptcha Response: {recaptchaResponse}", recaptchaResponse);
 
 
             var result = JsonSerializer.Deserialize<RecaptchaVerificationModel>(json);

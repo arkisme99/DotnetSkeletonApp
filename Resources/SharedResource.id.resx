@@ -60,4 +60,10 @@
   <data name="MenuTenant">
     <value>Manajemen Tenant</value>
   </data>
+  <data name="PesanCaptchaGagal">
+    <value>Captcha tidak valid</value>
+  </data>
+  <data name="PesanLoginGagal">
+    <value>Email atau password salah</value>
+  </data>
 </root>

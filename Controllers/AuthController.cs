@@ -8,10 +8,16 @@ using System.Threading.Tasks;
 using DotnetSkeletonApp.Services;
 using DotnetSkeletonApp.Services.Recaptcha;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace DotnetSkeletonApp.Controllers
 {
-    public class AuthController(IConfiguration _config, RecaptchaServices _recaptchaService) : BaseController
+    public class AuthController(
+        IConfiguration _config,
+        RecaptchaServices _recaptchaService,
+        AuthService _authService,
+        IStringLocalizer<SharedResource> _localizer
+        ) : BaseController
     {
 
         public IActionResult Login()
@@ -33,17 +39,17 @@ namespace DotnetSkeletonApp.Controllers
             {
                 // ModelState.AddModelError(string.Empty, "Verifikasi reCAPTCHA gagal. Silakan coba lagi.");
                 TempData["Notify.Type"] = "error";
-                TempData["Notify.Message"] = $"Verifikasi captcha gagal.";
+                TempData["Notify.Message"] = _localizer["PesanCaptchaGagal"].Value;
 
                 return RedirectToAction("Login");
             }
 
-            if (await _service.LoginAsync(email, password))
+            if (await _authService.LoginAsync(email, password))
                 return RedirectToAction("Index", "Home");
 
             // ViewBag.Error = "Invalid login attempt.";
             TempData["Notify.Type"] = "error";
-            TempData["Notify.Message"] = "Email or Password Is Wrong";
+            TempData["Notify.Message"] = _localizer["PesanLoginGagal"].Value;
 
             return RedirectToAction("Login");
         }

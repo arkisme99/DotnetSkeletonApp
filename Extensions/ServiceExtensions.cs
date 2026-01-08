@@ -11,9 +11,10 @@ namespace DotnetSkeletonApp.Extensions
     {
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
-            services.AddScoped<RecaptchaServices>();
-            // services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<EmailService>();
+            services.AddScoped<RecaptchaServices>();
+            services.AddScoped<ActivityLogService>();
+            services.AddScoped<AuthService>();
             // services.AddScoped<IRoleService, RoleService>();
             // services.AddScoped<IUserService, UserService>();
             // services.AddScoped<IActivityLogService, ActivityLogService>();

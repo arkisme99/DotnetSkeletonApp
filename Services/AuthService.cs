@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using DotnetSkeletonApp.Data;
+using DotnetSkeletonApp.Models.UserModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace DotnetSkeletonApp.Services
+{
+    public class AuthService(
+        UserManager<ApplicationUser> _userManager,
+        SignInManager<ApplicationUser> _signInManager,
+        ApplicationDbContext _dbcontext,
+        ILogger<AuthService> _logger,
+        ActivityLogService _activityLogService
+    )
+    {
+        public async Task<bool> LoginAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null) return false;
+
+            // 🔹 cek password
+            var result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: false);
+            if (!result.Succeeded) return false;
+
+            // 🔹 ambil role user
+            var roles = await _userManager.GetRolesAsync(user);
+
+            // 🔹 ambil permission dari role
+            var permissions = await _dbcontext.RolePermissions
+                .Where(rp => roles.Contains(rp.Role!.Name!))
+                .Select(rp => rp.Permission!.Name)
+                .ToListAsync();
+
+            // 🔹 build claims
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.Email, user.UserName ?? user.Email ?? email),
+                new(ClaimTypes.Name, user.FullName ?? "Nama Lengkap")
+            };
+
+            // role → claim
+            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
+            // permission → claim
+            claims.AddRange(permissions.Select(p => new Claim("Permission", p)));
+
+            // 🔹 buat identity baru
+            var claimsIdentity = new ClaimsIdentity(claims, "Identity.Application");
+
+            // 🔹 sign in ulang dengan claims
+            await _signInManager.SignOutAsync(); // clear dulu biar gak duplikat
+            await _signInManager.Context.SignInAsync(
+                "Identity.Application",
+                new ClaimsPrincipal(claimsIdentity)
+            );
+
+            _logger.LogInformation("Proses Login {email}, {roles}, {permissions}", email, roles, permissions);
+            await _activityLogService.LogChangeAsync(null, "Login", user.Id, null, null);
+
+            return true;
+        }
+    }
+}
