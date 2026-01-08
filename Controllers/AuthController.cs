@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotnetSkeletonApp.Controllers
 {
-    public class AuthController(IConfiguration _config) : Controller
+    public class AuthController(IConfiguration _config) : BaseController
     {
 
         public IActionResult Login(string? message)

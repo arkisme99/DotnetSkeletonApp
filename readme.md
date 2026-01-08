@@ -33,6 +33,10 @@ dotnet user-secrets set "GoogleReCaptcha:SecretKey" "rahasia"
 dotnet user-secrets list
 ```
 
+# BaseController
+
+- Untuk set variable global , agar bisa di pakai di semua view
+
 # Kegunaan package yang dipakai
 
 ```

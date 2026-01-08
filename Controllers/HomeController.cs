@@ -5,18 +5,19 @@ using DotnetSkeletonApp.Models.ViewModels;
 
 namespace DotnetSkeletonApp.Controllers;
 
-public class HomeController() : BaseController
+public class HomeController(ILogger<HomeController> _logger) : BaseController
 {
 
     public IActionResult Index()
     {
-        // _logger.LogInformation("Home Index");
 
         SetBreadcrumbs(
             new BreadcrumbsViewModel("Home", false, "Home", "Index"),
             new BreadcrumbsViewModel("Privacy", false, "Home", "Privacy"),
             new BreadcrumbsViewModel("About", true, "About", "Index")
         );
+
+        _logger.LogInformation("Masuk Ke Home Index");
         return View();
     }
     public IActionResult Privacy()

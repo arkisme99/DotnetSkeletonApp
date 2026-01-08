@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>@ViewData["Title"] - Dotnet Skeleton App</title>
+    <title>@ViewData["Title"] - @ViewData["nameApp"]</title>
     <link rel="shortcut icon" href="~/sources/img/favicon/fav.png" type="image/x-icon">
 
     <!-- base css -->
@@ -33,17 +33,16 @@
         <div
             class="page-logo m-0 w-100 align-items-center justify-content-center rounded border-bottom-left-radius-0 border-bottom-right-radius-0 px-4">
             <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
-                <img src="~/sources/img/favicon/fav.png" alt="@ViewData["Title"] - Dotnet Skeleton App"
+                <img src="@ViewData["logoPath"]" alt="@ViewData["Title"] - @ViewData["nameApp"]"
                     aria-roledescription="logo">
-                <span class="page-logo-text mr-1">@ViewData["Title"] - Dotnet Skeleton App</span>
+                <span class="page-logo-text mr-1">@ViewData["Title"] - @ViewData["nameApp"]</span>
             </a>
         </div>
         <div class="card p-4 border-top-left-radius-0 border-top-right-radius-0" style="background-color: #f5f5f5;">
             @RenderBody()
         </div>
         <div class="blankpage-footer text-center">
-            <span>Copyright &copy; 2026 <a href="javascript:void(0)">@ViewData["Title"] - Dotnet Skeleton
-                    App</a>.</span>
+            <span>Copyright &copy; 2026 <a href="javascript:void(0)">@ViewData["nameApp"]</a>.</span>
         </div>
     </div>
     <p id="js-color-profile" class="d-none">
