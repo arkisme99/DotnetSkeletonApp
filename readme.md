@@ -48,6 +48,10 @@ dotnet user-secrets list
 - dotnet ef migrations add AddNewMigration --context ApplicationDbContext
 - dotnet ef database update --context ApplicationDbContext
 
+# websocket / signal R (kayanya ga perlu)
+
+- dotnet dev-certs https --trust
+
 # run / start
 
 - dotnet watch run

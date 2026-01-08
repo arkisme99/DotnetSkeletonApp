@@ -1,0 +1,88 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script>
+    let countGlobal = 0;
+
+    let connection = new signalR.HubConnectionBuilder()
+        .withUrl("/hubs/notification")
+        .build();
+
+    //ini kalau websocket error
+    Object.defineProperty(WebSocket, 'OPEN', { value: 1, });
+
+    connection.start()
+        .then(function () {
+            console.log("Connected to SignalR");
+        })
+        .catch(function (err) {
+            console.error(err.toString())
+        });
+
+    connection.on("ReceiveNotification", function (data) {
+        countGlobal++
+        const msg = `✅ ${JSON.stringify(data)}`;
+        addNotificationToList(msg);
+        @* console.log(`Data Notif ${JSON.stringify(data)}`); *@
+    });
+
+    connection.on("JobSuccess", data => {
+        countGlobal++
+        const msg = `Job ${data.job} sukses ✅`;
+        addNotificationToList(msg);
+        toastr.success(msg);
+    });
+
+    connection.on("JobFailed", data => {
+        countGlobal++
+        const msg = `Job gagal: ${data.error}`;
+        addNotificationToList(msg);
+        toastr.error(msg);
+    });
+
+    connection.on("JobRetry", data => {
+        countGlobal++
+        const msg = `Job retry #${data.retryCount}`;
+        addNotificationToList(msg);
+        toastr.warning(msg);
+    });
+
+
+
+    function addNotificationToList(message) {
+        const timestamp = new Date().toLocaleTimeString();
+
+        // Template li (tambahkan styling CSS sesuai selera)
+        const listItem = `
+            <li class="unread">
+                <div class="d-flex align-items-center show-child-on-hover">
+                    <span class="d-flex flex-column flex-1">
+                    <span class="name d-flex align-items-center"
+                        >Administrator
+                        <span class="badge badge-success fw-n ml-1">UPDATE</span></span
+                    >
+                    <span class="msg-a fs-sm">
+                        ${message}
+                        <a href="docs_buildnotes.html">(patch notes)</a>
+                    </span>
+                    <span class="fs-nano text-muted mt-1">${timestamp}</span>
+                    </span>
+                    <div
+                    class="show-on-hover-parent position-absolute pos-right pos-bottom p-3"
+                    >
+                    <a href="#" class="text-muted" title="delete"
+                        ><i class="fal fa-trash-alt"></i
+                    ></a>
+                    </div>
+                </div>
+            </li>`;
+
+        // .prepend() membuat item baru muncul di paling atas
+        $("#listNotification").prepend(listItem);
+
+        // Opsional: Batasi jumlah notifikasi agar tidak memenuhi RAM (misal max 10)
+        if ($("#listNotification li").length > 10) {
+            $("#listNotification li:last").remove();
+        }
+
+        $(".countNotification").html(countGlobal)
+    }
+</script>

@@ -169,6 +169,8 @@
             themeSettings.classHolder && (classHolder.className = themeSettings.classHolder),
             themeSettings.themeURL && themeID.setAttribute("href", themeSettings.themeURL);
     </script>
+
+    @await Html.PartialAsync("_NotificationScripts")
 </body>
 
 </html>

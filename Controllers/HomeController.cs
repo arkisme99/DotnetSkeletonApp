@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Hangfire;
 using DotnetSkeletonApp.Services;
+using Microsoft.AspNetCore.SignalR;
+using DotnetSkeletonApp.Notifications;
+using System.Security.Claims;
 
 namespace DotnetSkeletonApp.Controllers;
 
@@ -53,16 +56,21 @@ public class HomeController(
     public IActionResult TestEmail()
     {
 
-        _jobs.Enqueue<EmailService>(svc => svc.SendEmailAsync(
-                                        0,
-                                        "penerima@email.com",
-                                        "Tes Kirim",
-                                        "Berhasil guys"
-                                    ));
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+        // Simpan JobId-nya
+        var jobId = _jobs.Enqueue<EmailService>(svc => svc.SendEmailAsync(
+            0, "penerima@email.com", "Tes Kirim Lagi", "Berhasil kirim email"
+        ));
 
-        TempData["Notify.Type"] = "success";
-        TempData["Notify.Message"] = "Tes Kirim Harusnya Berhasil";
+        // "Titipkan" userId ke dalam storage Hangfire berdasarkan jobId tersebut
+        using (var connection = JobStorage.Current.GetConnection())
+        {
+            connection.SetJobParameter(jobId, "CreatorUserId", currentUserId);
+        }
+
+        TempData["Notify.Type"] = "warning";
+        TempData["Notify.Message"] = "Informasi pengiriman akan ada di notifikasi";
 
         return RedirectToAction("Index");
     }

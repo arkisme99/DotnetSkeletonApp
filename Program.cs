@@ -1,4 +1,5 @@
 using DotnetSkeletonApp.Extensions;
+using DotnetSkeletonApp.Notifications;
 using DotnetSkeletonApp.Seeders;
 using Hangfire;
 using Microsoft.Extensions.Options;
@@ -17,8 +18,11 @@ builder.Services
     .AddAppServices();
 
 builder.Services.AddHttpContextAccessor();
-// Routing lowercase
+
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<JobNotificationFilter>();
+
+// Routing lowercase
 builder.Services.AddRouting(options =>
 {
     options.LowercaseUrls = true;
@@ -58,9 +62,12 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+var jobFilter = app.Services.GetRequiredService<JobNotificationFilter>();
+GlobalJobFilters.Filters.Add(jobFilter);
+
 app.UseHangfireDashboard("/hangfire-panel");
 
-// app.MapHub<NotificationHub>("/hubs/notification");
+app.MapHub<JobNotificationHub>("/hubs/notification");
 
 app.MapControllerRoute(
     name: "default",
