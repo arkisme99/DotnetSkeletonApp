@@ -15,6 +15,15 @@ namespace DotnetSkeletonApp.Controllers
             ViewData["Breadcrumbs"] = items.ToList();
         }
 
+        protected void NotifyMessages(string message, string type = "success")
+        {
+            if (!string.IsNullOrEmpty(message))
+            {
+                TempData["TypeMessage"] = type;
+                TempData["ValueMessage"] = message;
+            }
+        }
+
         public override async void OnActionExecuting(ActionExecutingContext context)
         {
             var nameApp = "Skeleton Dotnet App";
@@ -31,6 +40,33 @@ namespace DotnetSkeletonApp.Controllers
 
             base.OnActionExecuting(context);
         }
+
+        public override async Task OnActionExecutionAsync(
+        ActionExecutingContext context,
+        ActionExecutionDelegate next)
+        {
+            await next();
+
+            var request = context.HttpContext.Request;
+            var response = context.HttpContext.Response;
+
+            // 1️⃣ Dari TempData (CRUD)
+            if (TempData.TryGetValue("Notify.Message", out object? value))
+            {
+                ViewData["TypeMessage"] = TempData["Notify.Type"];
+                ViewData["ValueMessage"] = value;
+            }
+
+            // 2️⃣ Dari Cookie (Auth / Middleware)
+            if (request.Cookies.TryGetValue("notify_error", out var cookieMessage))
+            {
+                ViewData["TypeMessage"] = "error";
+                ViewData["ValueMessage"] = cookieMessage;
+
+                response.Cookies.Delete("notify_error");
+            }
+        }
+
 
     }
 }

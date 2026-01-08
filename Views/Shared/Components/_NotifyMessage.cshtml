@@ -1,0 +1,10 @@
+<script src="~/sources/js/notifications/toastr/toastr.js"></script>
+<script src="~/helpers/js/notification-messages.js"></script>
+<script>
+    const type = '@ViewData["TypeMessage"]';
+    const message = '@ViewData["ValueMessage"]';
+
+    if (message) {
+        notificationMessages(type, message);
+    }
+</script>

@@ -1,4 +1,5 @@
 using DotnetSkeletonApp.Extensions;
+using DotnetSkeletonApp.Seeders;
 using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,7 @@ var config = builder.Configuration;
 // === Modular Configuration ===
 builder.Services
     .AddDatabase(config)
-    // .AddIdentityWithCookie()
+    .AddIdentityWithCookie()
     .AddHangfireWithMySql(config)
     // .AddAuthorizationPolicies()
     .AddLocalizationSupport()
@@ -31,26 +32,12 @@ builder.WebHost.UseUrls("http://localhost:5000");
 var app = builder.Build();
 
 // panggil seeder di sini
-/* using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-
-    // 1️⃣ Jalankan migrasi untuk HOST
-    await HostMigrationRunner.RunAsync(services);
-
-    // Jalankan contoh tenant seeder // saat production di comment aja
-    await TenantSeeder.SeedAsync(services);
-
-    // Jalankan identity seeder untuk HOST
+    // Jalankan identity seeder
     await IdentitySeeder.SeedAsync(services);
-
-    // 2️⃣ Jalankan migrasi untuk TENANT
-    var tenantMigrator = services.GetRequiredService<TenantMigrationRunner>();
-
-    await Task.Delay(2000); //delay sebentar agar aman migration tenantnya, 2 detik cukup
-
-    await tenantMigrator.MigrateAllTenantsAsync();
-} */
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

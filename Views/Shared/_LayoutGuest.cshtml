@@ -164,18 +164,12 @@
 
     <script src="~/sources/js/vendors.bundle.js"></script>
     <script src="~/sources/js/app.bundle.js"></script>
-    <script src="~/sources/js/notifications/toastr/toastr.js"></script>
-    <script src="~/helpers/js/notification-messages.js"></script>
+
+    @await Html.PartialAsync("Components/_NotifyMessage", ViewData["ValueMessage"])
+
     @await RenderSectionAsync("Scripts", required: false)
 
-    <script>
-        const type = '@TempData["TypeMessage"]';
-        const message = '@TempData["ValueMessage"]';
 
-        if (message) {
-            notificationMessages(type, message);
-        }
-    </script>
 
 </body>
 

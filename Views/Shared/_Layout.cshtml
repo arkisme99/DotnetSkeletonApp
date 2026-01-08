@@ -138,9 +138,10 @@
     <!-- jQuery -->
     <script src="~/sources/js/vendors.bundle.js"></script>
     <script src="~/sources/js/app.bundle.js"></script>
-    <script src="~/sources/js/notifications/toastr/toastr.js"></script>
+
+    @await Html.PartialAsync("Components/_NotifyMessage", ViewData["ValueMessage"])
+
     @await RenderSectionAsync("Scripts", required: false)
-    <script src="~/helpers/js/notification-messages.js"></script>
 
     <script>
         'use strict';

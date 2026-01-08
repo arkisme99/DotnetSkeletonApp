@@ -2,12 +2,13 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using DotnetSkeletonApp.Models;
 using DotnetSkeletonApp.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotnetSkeletonApp.Controllers;
 
 public class HomeController(ILogger<HomeController> _logger) : BaseController
 {
-
+    [Authorize]
     public IActionResult Index()
     {
 
@@ -20,6 +21,8 @@ public class HomeController(ILogger<HomeController> _logger) : BaseController
         _logger.LogInformation("Masuk Ke Home Index");
         return View();
     }
+
+    [Authorize]
     public IActionResult Privacy()
     {
         SetBreadcrumbs(

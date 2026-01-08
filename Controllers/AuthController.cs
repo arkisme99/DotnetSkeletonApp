@@ -14,14 +14,8 @@ namespace DotnetSkeletonApp.Controllers
     public class AuthController(IConfiguration _config) : BaseController
     {
 
-        public IActionResult Login(string? message)
+        public IActionResult Login()
         {
-            if (!string.IsNullOrEmpty(message))
-            {
-                TempData["TypeMessage"] = "error";
-                TempData["ValueMessage"] = message;
-            }
-
             var siteKey = _config["GoogleReCaptcha:SiteKey"];
             ViewBag.SiteKey = siteKey;
             return View();
