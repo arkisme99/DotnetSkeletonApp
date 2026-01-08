@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using DotnetSkeletonApp.Models;
 using DotnetSkeletonApp.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
 
 namespace DotnetSkeletonApp.Controllers;
 
@@ -31,9 +32,21 @@ public class HomeController(ILogger<HomeController> _logger) : BaseController
         return View();
     }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [HttpGet]
+    public IActionResult SetLanguage(string culture, string returnUrl = "/")
+    {
+        Response.Cookies.Append(
+            CookieRequestCultureProvider.DefaultCookieName,
+            CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+            new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+        );
+
+        return LocalRedirect(returnUrl);
+    }
+
+    /* [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+    } */
 }

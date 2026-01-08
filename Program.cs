@@ -1,6 +1,7 @@
 using DotnetSkeletonApp.Extensions;
 using DotnetSkeletonApp.Seeders;
 using Hangfire;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,8 +51,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
-// app.UseRequestLocalization(locOptions.Value);
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(locOptions.Value);
 
 app.UseRouting();
 app.UseAuthentication();

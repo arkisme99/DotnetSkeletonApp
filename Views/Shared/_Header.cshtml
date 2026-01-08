@@ -1,3 +1,4 @@
+@using System.Globalization
 <header class="page-header" role="banner">
     <!-- we need this logo when user switches to nav-function-top -->
     <div class="page-logo">
@@ -96,11 +97,15 @@
                 </div>
                 <div class="dropdown-multilevel dropdown-multilevel-left">
                     <div class="dropdown-item">
-                        Languages
+                        Languages | @CultureInfo.CurrentUICulture.Name.ToUpper()
                     </div>
                     <div class="dropdown-menu">
-                        <a href="" class="dropdown-item active">English</a>
-                        <a href="" class="dropdown-item">Indonesian</a>
+                        <a asp-controller="Home" asp-action="SetLanguage" asp-route-culture="en"
+                            asp-route-returnUrl="@Context.Request.Path"
+                            class="dropdown-item @(CultureInfo.CurrentUICulture.Name == "en" ? "active" : "")">English</a>
+                        <a asp-controller="Home" asp-action="SetLanguage" asp-route-culture="id"
+                            asp-route-returnUrl="@Context.Request.Path"
+                            class="dropdown-item @(CultureInfo.CurrentUICulture.Name == "id" ? "active" : "")">Indonesian</a>
                     </div>
                 </div>
                 <div class=" dropdown-divider m-0">

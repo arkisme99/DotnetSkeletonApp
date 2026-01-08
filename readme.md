@@ -50,7 +50,12 @@ dotnet user-secrets list
 
 # run / start
 
-dotnet watch run
+- dotnet watch run
+
+# user login awal
+
+- email : admin@test.com
+- password : admin12345
 
 # Kegunaan package yang dipakai
 
