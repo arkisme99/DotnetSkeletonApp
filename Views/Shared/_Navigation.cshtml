@@ -2,9 +2,9 @@
     <div class="page-logo">
         <a href="" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
             data-toggle="modal" data-target="#modal-shortcut">
-            <img src="~/sources/img/favicon/fav.png" alt="@ViewData["Title"] - Dotnet Skeleton App"
+            <img src="@ViewData["logoPath"]" alt="@ViewData["Title"] - @ViewData["nameApp"]"
                 aria-roledescription="logo">
-            <span class="page-logo-text mr-1">@ViewData["Title"] - Dotnet Skeleton App</span>
+            <span class="page-logo-text mr-1">@ViewData["Title"] - @ViewData["nameApp"]</span>
             <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
         </a>
     </div>
@@ -21,8 +21,8 @@
         </div>
         <div class="info-card pt-3" style="flex-direction: column !important">
             <div class="">
-                <img src="~/sources/img/demo/avatars/avatar-admin.png" class="profile-image rounded-circle "
-                    alt="Nama Lengkap" style="margin-top: 10px;">
+                <img src="@ViewData["profileImage"]" class="profile-image rounded-circle " alt="Nama Lengkap"
+                    style="margin-top: 10px;">
             </div>
             <div class="info-card-text " style="margin-top: 10px; align-items: center">
                 <a href="" class="text-white">
