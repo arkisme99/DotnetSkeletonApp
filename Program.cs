@@ -7,9 +7,9 @@ var config = builder.Configuration;
 
 // === Modular Configuration ===
 builder.Services
-    // .AddDatabaseAndMultiTenant(config)
+    .AddDatabase(config)
     // .AddIdentityWithCookie()
-    // .AddHangfireWithMySql(config)
+    .AddHangfireWithMySql(config)
     // .AddAuthorizationPolicies()
     .AddLocalizationSupport()
     .AddAppServices();
@@ -70,7 +70,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// app.UseHangfireDashboard("/hangfire-panel");
+app.UseHangfireDashboard("/hangfire-panel");
 
 // app.MapHub<NotificationHub>("/hubs/notification");
 

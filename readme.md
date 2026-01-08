@@ -37,6 +37,21 @@ dotnet user-secrets list
 
 - Untuk set variable global , agar bisa di pakai di semua view
 
+# command make migrations (sesuai urutan)
+
+- dotnet ef dbcontext list
+- dotnet ef migrations add Initial --context ApplicationDbContext //ini jalankan kalau Folder Migration tidak ada
+- dotnet ef database update --context ApplicationDbContext // ini dijalankan juga saat setting awal
+
+# Migration Baru:
+
+- dotnet ef migrations add AddNewMigration --context ApplicationDbContext
+- dotnet ef database update --context ApplicationDbContext
+
+# run / start
+
+dotnet watch run
+
 # Kegunaan package yang dipakai
 
 ```
