@@ -1,0 +1,9 @@
+@using DotnetSkeletonApp.Models.ViewModels
+@model InputCheckboxViewModel
+
+<div class="icheck-@Model.Color @(Model.AddNewClass)">
+    <input type="checkbox" id="@Model.Id" name="@Model.Name" @Html.Raw(Model.Attributes)>
+    <label for="@Model.Id">
+        @Model.Label
+    </label>
+</div>

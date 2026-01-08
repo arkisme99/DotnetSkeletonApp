@@ -10,6 +10,7 @@
     var inputGroupEmail = new InputGroupViewModel
     {
         Label = @Localizer["Youre Email"],
+        Type = "email",
         Name = "email",
         Id = "email",
         PlaceHolder = @Localizer["Enter your Email"],
@@ -20,12 +21,27 @@
     var inputGroupPassword = new InputGroupViewModel
     {
         Label = @Localizer["Youre Password"],
+        Type = "password",
         Name = "password",
         Id = "password",
         PlaceHolder = @Localizer["Enter your Password"],
         Attributes = "required",
         Icon = "show-password-toggle fal fa-eye",
         DataTargetIcon = "#password"
+    };
+
+    var submitForm = new SubmitCustomViewModel
+    {
+        Label = @Localizer["Login"],
+        Id = "btnSubmit",
+        AddNewClass = "btn-block"
+    };
+
+    var checkBoxRememberMe = new InputCheckboxViewModel
+    {
+        Label = @Localizer["Remember me"],
+        Id = "remember_me",
+        Name = "remember"
     };
 
 }
@@ -37,19 +53,18 @@
 
     <div class="row">
         <div class="col-6">
-            <input type="checkbox" name="remember" id="remember_me">
-            <label for="remember_me">@Localizer["Remember me"]</label>
+            @await Html.PartialAsync("Components/_InputCheckbox", checkBoxRememberMe)
         </div>
         <!-- /.col -->
         <div class="col-6">
-            <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">@Localizer["Login"]</button>
+            @await Html.PartialAsync("Components/_SubmitCustom", submitForm)
         </div>
         <!-- /.col -->
     </div>
 </form>
 
-<p class="text-center text-muted small mb-1">
-    <strong>Plan:</strong> Basic &ensp; | &ensp; <em>Version: 1.0.0</em>
+<p class="text-center text-muted small mt-1 mb-1">
+    <strong><em>Version: 1.0.0</em></strong>
 </p>
 
 @section Scripts {

@@ -1,0 +1,5 @@
+@model SubmitCustomViewModel
+@using DotnetSkeletonApp.Models.ViewModels
+
+<button type="@Model.Type" class="btn btn-@Model.Color @(Model.AddNewClass)" id="@Model.Id" @Html.Raw(Model.Attributes)>
+    <i class="@Model.Icon"></i> @Model.Label</button>

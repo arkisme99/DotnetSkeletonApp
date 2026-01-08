@@ -9,8 +9,8 @@
 }
 
 <div class="input-group mb-3 has-validation">
-    <input class="form-control @(Model.AddNewClass ?? "")" placeholder="@Model.PlaceHolder" name="@Model.Name"
-        id="@Model.Id" @Html.Raw(Model.Attributes ?? "")>
+    <input type="@Model.Type" class="form-control @(Model.AddNewClass ?? "")" placeholder="@Model.PlaceHolder"
+        name="@Model.Name" id="@Model.Id" @Html.Raw(Model.Attributes ?? "")>
     <div class="input-group-append">
         <span class="input-group-text">
             @{
