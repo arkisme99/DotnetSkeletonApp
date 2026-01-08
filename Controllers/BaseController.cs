@@ -15,15 +15,6 @@ namespace DotnetSkeletonApp.Controllers
             ViewData["Breadcrumbs"] = items.ToList();
         }
 
-        protected void NotifyMessages(string message, string type = "success")
-        {
-            if (!string.IsNullOrEmpty(message))
-            {
-                TempData["TypeMessage"] = type;
-                TempData["ValueMessage"] = message;
-            }
-        }
-
         public override async Task OnActionExecutionAsync(
         ActionExecutingContext context,
         ActionExecutionDelegate next)

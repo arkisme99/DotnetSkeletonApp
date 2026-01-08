@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Services;
+using DotnetSkeletonApp.Services.Recaptcha;
 
 namespace DotnetSkeletonApp.Extensions
 {
@@ -10,7 +11,7 @@ namespace DotnetSkeletonApp.Extensions
     {
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
-            // services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<RecaptchaServices>();
             // services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<EmailService>();
             // services.AddScoped<IRoleService, RoleService>();

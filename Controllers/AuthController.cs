@@ -6,12 +6,12 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Services;
+using DotnetSkeletonApp.Services.Recaptcha;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace DotnetSkeletonApp.Controllers
 {
-    public class AuthController(IConfiguration _config) : BaseController
+    public class AuthController(IConfiguration _config, RecaptchaServices _recaptchaService) : BaseController
     {
 
         public IActionResult Login()
@@ -21,22 +21,19 @@ namespace DotnetSkeletonApp.Controllers
             return View();
         }
 
-        /* [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
             // Ambil response dari form
             var recaptchaResponse = Request.Form["g-recaptcha-response"];
-            var secretKey = _config["GoogleReCaptcha:SecretKey"];
 
-            var verifCaptcha = await VerifyRecaptchaAsync(secretKey!, recaptchaResponse!);
+            var verifCaptcha = await _recaptchaService.VerifyAsync(recaptchaResponse!);
 
             if (!verifCaptcha)
             {
                 // ModelState.AddModelError(string.Empty, "Verifikasi reCAPTCHA gagal. Silakan coba lagi.");
-                TempData["TypeMessage"] = "error";
-                TempData["ValueMessage"] = $"Verifikasi captcha gagal.";
-                Console.WriteLine($"sec: {secretKey}");
-                Console.WriteLine($"rec: {recaptchaResponse}");
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = $"Verifikasi captcha gagal.";
 
                 return RedirectToAction("Login");
             }
@@ -45,13 +42,13 @@ namespace DotnetSkeletonApp.Controllers
                 return RedirectToAction("Index", "Home");
 
             // ViewBag.Error = "Invalid login attempt.";
-            TempData["TypeMessage"] = "error";
-            TempData["ValueMessage"] = "Email or Password Is Wrong";
+            TempData["Notify.Type"] = "error";
+            TempData["Notify.Message"] = "Email or Password Is Wrong";
 
             return RedirectToAction("Login");
         }
 
-        [HttpPost]
+        /* [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _service.LogoutAsync();
@@ -59,7 +56,7 @@ namespace DotnetSkeletonApp.Controllers
             TempData["ValueMessage"] = "Logout Sukses, Terimakasih!";
 
             return RedirectToAction("Login");
-        }
+        } */
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -67,38 +64,5 @@ namespace DotnetSkeletonApp.Controllers
             return View("Error");
         }
 
-        private async Task<bool> VerifyRecaptchaAsync(string secretKey, string recaptchaResponse)
-        {
-            var client = _httpClientFactory.CreateClient();
-
-            var content = new FormUrlEncodedContent(
-            [
-                new KeyValuePair<string, string>("secret", secretKey),
-                new KeyValuePair<string, string>("response", recaptchaResponse)
-            ]);
-
-            var response = await client.PostAsync("https://www.google.com/recaptcha/api/siteverify", content);
-            var json = await response.Content.ReadAsStringAsync();
-
-            var result = JsonSerializer.Deserialize<RecaptchaVerificationResponse>(json);
-            Console.WriteLine(json); // <-- Tambahkan log ini sementara
-
-            return result?.Success ?? false;
-        }
-
-        private class RecaptchaVerificationResponse
-        {
-            [JsonPropertyName("success")]
-            public bool Success { get; set; }
-
-            [JsonPropertyName("challenge_ts")]
-            public string? Challenge_ts { get; set; }
-
-            [JsonPropertyName("hostname")]
-            public string? Hostname { get; set; }
-
-            [JsonPropertyName("error-codes")]
-            public List<string>? ErrorCodes { get; set; }
-        } */
     }
 }

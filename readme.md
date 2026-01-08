@@ -35,7 +35,7 @@ dotnet user-secrets list
 
 # BaseController
 
-- Untuk set variable global , agar bisa di pakai di semua view
+- salah satunya dipakai Untuk set variable global , agar bisa di pakai di semua view
 
 # command make migrations (sesuai urutan)
 

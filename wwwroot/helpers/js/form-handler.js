@@ -65,7 +65,7 @@ function handleFormSubmission({
     event.preventDefault();
 
     $btn
-      .html(`<i class="fa fa-spinner fa-spin"></i> Loading...`)
+      .html(`<i class="fal fa-spinner fa-spin"></i> Loading...`)
       .prop("disabled", true);
 
     // console.log(captchaSiteKey + " inii");
