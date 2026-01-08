@@ -24,23 +24,6 @@ namespace DotnetSkeletonApp.Controllers
             }
         }
 
-        public override async void OnActionExecuting(ActionExecutingContext context)
-        {
-            var nameApp = "Skeleton Dotnet App";
-            var logoPath = "/sources/img/favicon/fav.png";
-            var planApp = "Premium";
-            var versiApp = "1.0.1";
-            var profileImage = "/sources/img/demo/avatars/avatar-admin.png";
-
-            ViewData["nameApp"] = nameApp;
-            ViewData["logoPath"] = logoPath;
-            ViewData["planApp"] = planApp;
-            ViewData["versiApp"] = versiApp;
-            ViewData["profileImage"] = profileImage;
-
-            base.OnActionExecuting(context);
-        }
-
         public override async Task OnActionExecutionAsync(
         ActionExecutingContext context,
         ActionExecutionDelegate next)
@@ -65,6 +48,20 @@ namespace DotnetSkeletonApp.Controllers
 
                 response.Cookies.Delete("notify_error");
             }
+
+            var nameApp = "Skeleton Dotnet App";
+            var logoPath = "/sources/img/favicon/fav.png";
+            var planApp = "Premium";
+            var versiApp = "1.0.1";
+            var profileImage = "/sources/img/demo/avatars/avatar-admin.png";
+
+            ViewData["nameApp"] = nameApp;
+            ViewData["logoPath"] = logoPath;
+            ViewData["planApp"] = planApp;
+            ViewData["versiApp"] = versiApp;
+            ViewData["profileImage"] = profileImage;
+
+            base.OnActionExecuting(context);
         }
 
 

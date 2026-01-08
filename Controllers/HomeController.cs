@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DotnetSkeletonApp.Controllers;
 
+[Authorize]
 public class HomeController(ILogger<HomeController> _logger) : BaseController
 {
-    [Authorize]
     public IActionResult Index()
     {
 
@@ -22,7 +22,6 @@ public class HomeController(ILogger<HomeController> _logger) : BaseController
         return View();
     }
 
-    [Authorize]
     public IActionResult Privacy()
     {
         SetBreadcrumbs(
