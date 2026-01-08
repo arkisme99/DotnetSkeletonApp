@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotnetSkeletonApp.Controllers
 {
-    public class AuthController() : Controller
+    public class AuthController(IConfiguration _config) : Controller
     {
 
         public IActionResult Login(string? message)
@@ -22,8 +22,8 @@ namespace DotnetSkeletonApp.Controllers
                 TempData["ValueMessage"] = message;
             }
 
-            // var siteKey = _config["GoogleReCaptcha:SiteKey"];
-            // ViewBag.SiteKey = siteKey;
+            var siteKey = _config["GoogleReCaptcha:SiteKey"];
+            ViewBag.SiteKey = siteKey;
             return View();
         }
 

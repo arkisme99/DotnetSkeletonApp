@@ -68,46 +68,15 @@
 </p>
 
 @section Scripts {
-    <script src="~/sources/plugins/jquery-validation/jquery.validate.min.js"></script>
-    @* <script src="https://www.google.com/recaptcha/api.js?render={{ env('CAPTCHA_SITEKEY') }}"></script> *@
+    <script src="~/helpers/js/form-handler.js"></script>
     <script src="~/helpers/js/showpassword.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=@ViewBag.SiteKey"></script>
     <script>
-        $(function () {
-            $('#formProccess').validate({
-                rules: {
-                    email: {
-                        required: true,
-                        email: true,
-                    },
-                    password: {
-                        required: true,
-                        minlength: 8
-                    },
-                },
-                messages: {
-                    email: {
-                        required: "Please enter a email address",
-                        email: "Please enter a valid email address"
-                    },
-                    password: {
-                        required: "Please provide a password",
-                        minlength: "Your password must be at least 8 characters long"
-                    },
-                },
-                errorElement: 'span',
-                errorPlacement: function (error, element) {
-                    const feedbackEl = element.closest('.input-group').find('.invalid-feedback');
-                    // Isi teks error ke dalam span yang sudah ada
-                    feedbackEl.text(error.text()).addClass('d-block');
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                    $(element).closest('.input-group').find('.invalid-feedback').removeClass('d-block').empty();
-                }
-            });
+        handleFormSubmission({
+            formSelector: '#formProccess',
+            buttonSelector: '#btnSubmit',
+            captchaSiteKey: "@ViewBag.SiteKey"
         });
     </script>
 }

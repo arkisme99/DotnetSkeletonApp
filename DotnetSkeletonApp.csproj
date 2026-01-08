@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>af5097fa-e6a1-4b2e-9981-b13dc60dbd2c</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Hangfire" Version="1.8.21" />

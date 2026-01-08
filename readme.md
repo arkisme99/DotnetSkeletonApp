@@ -20,6 +20,19 @@ dotnet new mvc -n DotnetSkeletonApp
 
 - Untuk menyimpan file yang berkaitan dengan authorization user
 
+# Setup Configuration (Wajib)
+
+```
+dotnet user-secrets init
+
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "server=localhost;port=3306;database=database_name;user=root;password=;Allow User Variables=true;"
+
+dotnet user-secrets set "GoogleReCaptcha:SiteKey" "rahasia"
+dotnet user-secrets set "GoogleReCaptcha:SecretKey" "rahasia"
+
+dotnet user-secrets list
+```
+
 # Kegunaan package yang dipakai
 
 ```
