@@ -11,7 +11,7 @@ builder.Services
     .AddDatabase(config)
     .AddIdentityWithCookie()
     .AddHangfireWithMySql(config)
-    // .AddAuthorizationPolicies()
+    .AddAuthorizationPolicies()
     .AddLocalizationSupport()
     .AddAppServices();
 
