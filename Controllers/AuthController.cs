@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using DotnetSkeletonApp.Helpers.Authorization;
 using DotnetSkeletonApp.Services;
 using DotnetSkeletonApp.Services.Recaptcha;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
 namespace DotnetSkeletonApp.Controllers
 {
-    [ServiceFilter(typeof(RedirectIfAuthenticated))]
     public class AuthController(
         IConfiguration _config,
         RecaptchaServices _recaptchaService,
@@ -21,7 +21,7 @@ namespace DotnetSkeletonApp.Controllers
         IStringLocalizer<SharedResource> _localizer
         ) : BaseController
     {
-
+        [ServiceFilter(typeof(RedirectIfAuthenticated))]
         public IActionResult Login()
         {
             var siteKey = _config["GoogleReCaptcha:SiteKey"];
@@ -29,6 +29,7 @@ namespace DotnetSkeletonApp.Controllers
             return View();
         }
 
+        [ServiceFilter(typeof(RedirectIfAuthenticated))]
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
@@ -56,15 +57,16 @@ namespace DotnetSkeletonApp.Controllers
             return RedirectToAction("Login");
         }
 
-        /* [HttpPost]
+        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await _service.LogoutAsync();
-            TempData["TypeMessage"] = "warning";
-            TempData["ValueMessage"] = "Logout Sukses, Terimakasih!";
+            await _authService.LogoutAsync();
+            TempData["Notify.Type"] = "warning";
+            TempData["Notify.Message"] = "Logout Sukses, Terimakasih!";
 
             return RedirectToAction("Login");
-        } */
+        }
 
         /* [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

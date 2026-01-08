@@ -16,7 +16,8 @@ namespace DotnetSkeletonApp.Services
         SignInManager<ApplicationUser> _signInManager,
         ApplicationDbContext _dbcontext,
         ILogger<AuthService> _logger,
-        ActivityLogService _activityLogService
+        ActivityLogService _activityLogService,
+        IHttpContextAccessor _httpContextAccessor
     )
     {
         public async Task<bool> LoginAsync(string email, string password)
@@ -66,6 +67,13 @@ namespace DotnetSkeletonApp.Services
             await _activityLogService.LogChangeAsync(null, "Login", user.Id, null, null);
 
             return true;
+        }
+
+        public async Task LogoutAsync()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "System";
+            await _activityLogService.LogChangeAsync(null, "Logout", userId, null, null);
+            await _signInManager.SignOutAsync();
         }
     }
 }

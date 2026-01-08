@@ -66,4 +66,13 @@
   <data name="PesanLoginGagal">
     <value>Email or password is wrong</value>
   </data>
+  <data name="InfoKeluarApp">
+    <value>Logout Application Now</value>
+  </data>
+  <data name="Informasi">
+    <value>Information</value>
+  </data>
+  <data name="YaKeluar">
+    <value>Yes, Logout</value>
+  </data>
 </root>

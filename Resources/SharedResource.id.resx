@@ -66,4 +66,13 @@
   <data name="PesanLoginGagal">
     <value>Email atau password salah</value>
   </data>
+  <data name="InfoKeluarApp">
+    <value>Keluar Aplikasi Sekarang</value>
+  </data>
+  <data name="Informasi">
+    <value>Informasi</value>
+  </data>
+  <data name="YaKeluar">
+    <value>Ya, Keluar</value>
+  </data>
 </root>
