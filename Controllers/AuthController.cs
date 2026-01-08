@@ -22,16 +22,18 @@ namespace DotnetSkeletonApp.Controllers
         ) : BaseController
     {
         [ServiceFilter(typeof(RedirectIfAuthenticated))]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
             var siteKey = _config["GoogleReCaptcha:SiteKey"];
             ViewBag.SiteKey = siteKey;
+
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [ServiceFilter(typeof(RedirectIfAuthenticated))]
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password, string? returnUrl = null)
         {
             // Ambil response dari form
             var recaptchaResponse = Request.Form["g-recaptcha-response"];
@@ -48,7 +50,15 @@ namespace DotnetSkeletonApp.Controllers
             }
 
             if (await _authService.LoginAsync(email, password))
+            {
+                if (!string.IsNullOrEmpty(returnUrl) &&
+                Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
                 return RedirectToAction("Index", "Home");
+            }
 
             // ViewBag.Error = "Invalid login attempt.";
             TempData["Notify.Type"] = "error";

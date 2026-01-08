@@ -57,6 +57,7 @@
         </div>
         <!-- /.col -->
         <div class="col-6">
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]">
             @await Html.PartialAsync("Components/_SubmitCustom", submitForm)
         </div>
         <!-- /.col -->
