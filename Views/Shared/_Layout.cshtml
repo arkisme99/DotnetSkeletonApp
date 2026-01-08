@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @* <meta name="csrf-token" content=""> *@
-    <title>@ViewData["Title"] - Dotnet Skeleton App</title>
+    <title>@ViewData["Title"] - @ViewData["nameApp"]</title>
     <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/sources/css/vendors.bundle.css">
     <link id="appbundle" rel="stylesheet" media="screen, print" href="~/sources/css/app.bundle.css">
     <link rel="stylesheet" media="screen, print" href="~/sources/css/notifications/toastr/toastr.css">
@@ -19,12 +19,14 @@
 </head>
 
 <body class="mod-bg-1">
+
     <div class="page-wrapper">
         <div class="page-inner">
             @await Html.PartialAsync("_Navigation")
             <div class="page-content-wrapper">
                 @await Html.PartialAsync("_Header")
                 <main id="js-page-content" role="main" class="page-content">
+                    @await Html.PartialAsync("Components/_Breadcrumbs", ViewData["Breadcrumbs"])
                     @RenderBody()
                 </main>
 
@@ -58,7 +60,7 @@
                 <!-- BEGIN Page Footer -->
                 <footer class="page-footer" role="contentinfo">
                     <div class="d-flex align-items-center flex-1 text-muted">
-                        <span class="hidden-md-down fw-700">Copyright &copy; 2026. Dotnet Skeleton App.</span>
+                        <span class="hidden-md-down fw-700">Copyright &copy; 2026. @ViewData["nameApp"].</span>
                     </div>
                     <div class="text-right">
                         <span class="badge badge-success">

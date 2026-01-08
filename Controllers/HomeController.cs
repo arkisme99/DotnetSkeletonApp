@@ -1,21 +1,30 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using DotnetSkeletonApp.Models;
+using DotnetSkeletonApp.Models.ViewModels;
 
 namespace DotnetSkeletonApp.Controllers;
 
-public class HomeController(ILogger<HomeController> logger) : Controller
+public class HomeController() : BaseController
 {
-    // private readonly ILogger<HomeController> _logger = logger;
 
     public IActionResult Index()
     {
-        logger.LogInformation("Home Index");
+        // _logger.LogInformation("Home Index");
+
+        SetBreadcrumbs(
+            new BreadcrumbsViewModel("Home", false, "Home", "Index"),
+            new BreadcrumbsViewModel("Privacy", false, "Home", "Privacy"),
+            new BreadcrumbsViewModel("About", true, "About", "Index")
+        );
         return View();
     }
-
     public IActionResult Privacy()
     {
+        SetBreadcrumbs(
+            new BreadcrumbsViewModel("Home", false, "Home", "Index"),
+            new BreadcrumbsViewModel("Privacy", true, "Home", "Privacy")
+        );
         return View();
     }
 

@@ -1,0 +1,23 @@
+@using DotnetSkeletonApp.Models.ViewModels
+@model List<BreadcrumbsViewModel>
+
+<ol class="breadcrumb page-breadcrumb">
+
+    @foreach (var item in Model)
+    {
+        if (item.Active == true)
+        {
+            <li class="breadcrumb-item active">@item.Label</li>
+        }
+        else
+        {
+            <li class="breadcrumb-item">
+                <a asp-controller="@item.AspController" asp-action="@item.Action">@item.Label</a>
+            </li>
+        }
+
+    }
+
+
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
