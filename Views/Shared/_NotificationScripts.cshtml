@@ -2,6 +2,14 @@
 <script>
     let countGlobal = 0;
 
+    $(function () {
+        // Semua kode jQuery Anda diletakkan di sini
+        console.log("DOM sudah siap!");
+
+        // Panggil fungsi AJAX Anda di sini agar jalan saat page load
+        loadNotifications();
+    });
+
     let connection = new signalR.HubConnectionBuilder()
         .withUrl("/hubs/notification")
         .build();
@@ -46,10 +54,61 @@
         addNotificationToList(data);
     });
 
+    function readAllNotifications() {
+        $.ajax({
+            url: `/read-all-notifications`,
+            type: 'POST',
+            success: function (response) {
+                if (response.success) {
+                    loadNotifications()
+                }
 
+            },
+            error: function (xhr, status, error) {
+                console.error("Terjadi kesalahan: " + error);
+            }
+        });
+    }
+
+    function readNotifications(idNotif) {
+        $.ajax({
+            url: `/read-notification/${idNotif}`,
+            type: 'POST',
+            success: function (response) {
+                if (response.success) {
+                    loadNotifications()
+                }
+
+            },
+            error: function (xhr, status, error) {
+                console.error("Terjadi kesalahan: " + error);
+            }
+        });
+    }
+
+    function loadNotifications() {
+        $.ajax({
+            url: '/get-all-notifications',
+            type: 'GET',
+            success: function (data) {
+                countGlobal = data.count
+
+                // clear items dulu
+                $("#listNotification").html('');
+                $(".countNotification").html(countGlobal)
+
+                $.each(data.items, function (index, item) {
+                    addNotificationToList(item)
+                });
+
+            },
+            error: function (xhr, status, error) {
+                console.error("Terjadi kesalahan: " + error);
+            }
+        });
+    }
 
     function addNotificationToList(data) {
-
         let linkFile = '';
 
         if (data.fileUrl === null) {
@@ -58,7 +117,7 @@
             linkFile = `<a href="${data.fileUrl}">download</a>`;
         }
 
-        const dateObj = new Date(data.time);
+        const dateObj = new Date(data.createdAt);
 
         const localDateTime = dateObj.toLocaleString('id-ID', {
             dateStyle: 'medium',
@@ -81,8 +140,8 @@
                     <div
                     class="show-on-hover-parent position-absolute pos-right pos-bottom p-3"
                     >
-                    <a href="#" class="text-muted" title="delete"
-                        ><i class="fal fa-trash-alt"></i
+                    <a href="javascript:void(0)" class="text-muted" title="read" onclick="readNotifications('${data.id}')"
+                        ><i class="fal fa-eye"></i
                     ></a>
                     </div>
                 </div>
@@ -90,11 +149,6 @@
 
         // .prepend() membuat item baru muncul di paling atas
         $("#listNotification").prepend(listItem);
-
-        // Opsional: Batasi jumlah notifikasi agar tidak memenuhi RAM (misal max 10)
-        if ($("#listNotification li").length > 10) {
-            $("#listNotification li:last").remove();
-        }
 
         $(".countNotification").html(countGlobal)
     }
