@@ -1,0 +1,5 @@
+@if (User.HasClaim("Permission", $"Create_{ViewData["currentController"]}"))
+{
+    <a asp-controller="@ViewData["currentController"]" asp-action="Create"
+        class="btn btn-sm btn-success btn-icon waves-effect waves-themed"><i class="fal fa-plus"></i> </a>
+}

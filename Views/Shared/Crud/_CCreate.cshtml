@@ -1,0 +1,32 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    // Menghubungkan ke Master Layout
+    Layout = "Crud/_CardLayout";
+}
+
+<form asp-controller="" asp-action="" method="post" id="formProccess">
+    @RenderBody()
+</form>
+
+@section TitleInfo {
+    <i class="fal fa-plus"></i>&nbsp;@Localizer["CreateNew"] @ViewData["Title"]
+}
+
+@section PanelToolbar {
+    @await Html.PartialAsync("Components/_ButtonBack")
+}
+
+@section Styles {
+
+}
+
+@section Scripts {
+
+}
+
+@section HeaderInfo {
+    @* Salurkan section HeaderInfo dari Index ke _Layout *@
+    @RenderSection("HeaderInfo", required: false)
+}

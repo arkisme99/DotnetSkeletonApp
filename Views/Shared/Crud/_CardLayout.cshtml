@@ -1,0 +1,32 @@
+@{
+    // Menghubungkan ke Master Layout
+    Layout = "_Layout";
+}
+
+@RenderSection("HeaderInfo", required: false)
+
+<div class="panel">
+    <div class="panel-hdr bg-primary">
+        <h2 class="text-white">
+            @RenderSection("TitleInfo", required: false)
+        </h2>
+        <div class="panel-toolbar">
+            @RenderSection("PanelToolbar", required: false)
+        </div>
+    </div>
+    <div class="panel-container">
+        <div class="panel-content">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @* Salurkan section Styles dari Index ke _Layout *@
+    @RenderSection("Styles", required: false)
+}
+
+@section Scripts {
+    @* Salurkan section Scripts dari Index ke _Layout *@
+    @RenderSection("Scripts", required: false)
+}

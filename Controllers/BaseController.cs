@@ -52,6 +52,10 @@ namespace DotnetSkeletonApp.Controllers
             ViewData["versiApp"] = versiApp;
             ViewData["profileImage"] = profileImage;
 
+            var currentController = Request.RouteValues["controller"]?.ToString() ?? "";
+            ViewData["currentController"] = currentController;
+            ViewData["Title"] = currentController;
+
             base.OnActionExecuting(context);
         }
 

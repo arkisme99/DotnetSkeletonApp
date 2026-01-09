@@ -1,10 +1,41 @@
-@using DotnetSkeletonApp.Models.ViewModels
-@model CTableViewModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 
-<card-layout title='<i class="fal fa-table"></i> &nbsp;List Of @Model.Title'>
+@{
+    // Menghubungkan ke Master Layout
+    Layout = "Crud/_CardLayout";
+}
 
-    <h5>Harusnya di dalam card</h5>
+<table id="example" class="table table-bordered table-striped table-hover" style="width: 100%;">
+    @RenderBody()
+</table>
 
-</card-layout>
+@section TitleInfo {
+    <i class="fal fa-table"></i>&nbsp;@Localizer["Data"] @ViewData["Title"]
+}
 
-<h4>Harusnya di luar card</h4>
+@section PanelToolbar {
+    @await Html.PartialAsync("Components/_ButtonCreate")
+    &nbsp;
+    @await Html.PartialAsync("Components/_ButtonMultiDelete")
+    &nbsp;
+    @await Html.PartialAsync("Components/_ButtonAdditional")
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/sources/css/datagrid/datatables/datatables.bundle.css">
+}
+
+@section Scripts {
+    <script src="~/sources/js/datagrid/datatables/datatables.bundle.js"></script>
+    <script>
+        $(function () {
+            $("#example").DataTable()
+        })
+    </script>
+}
+
+@section HeaderInfo {
+    @* Salurkan section HeaderInfo dari Index ke _Layout *@
+    @RenderSection("HeaderInfo", required: false)
+}

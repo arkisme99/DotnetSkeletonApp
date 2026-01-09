@@ -1,0 +1,5 @@
+@if (User.HasClaim("Permission", $"MultiDelete_{ViewData["currentController"]}"))
+{
+    <a href="javascript:;" class="btn btn-sm btn-danger btn-icon waves-effect waves-themed" onclick="hapusmulti()"><i
+            class="fal fa-trash"></i></a>
+}
