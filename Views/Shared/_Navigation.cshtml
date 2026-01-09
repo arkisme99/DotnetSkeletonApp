@@ -53,15 +53,40 @@
                     <span class="nav-link-text" data-i18n="nav.home">@Localizer["Home"]</span>
                 </a>
             </li>
-            @if (User.HasClaim("Permission", "View_User"))
+
+            <li class="nav-title">@Localizer["MasterData"]</li>
+            @if (User.HasClaim("Permission", "View_User") || User.HasClaim("Permission", "View_Role"))
             {
-                <li class="@(Context.Request.Path.StartsWithSegments("/user") ? "active" : "")">
-                    <a asp-controller="User" asp-action="Index" title="@Localizer["User"]" data-filter-tags="user">
+                <li
+                    class="@(Context.Request.Path.StartsWithSegments("/user") || Context.Request.Path.StartsWithSegments("/role") ? "active open" : "")">
+                    <a href="#" title="@Localizer["UserManagement"].ToString().ToLower()"
+                        data-filter-tags="@Localizer["UserManagement"].ToString().ToLower()">
                         <i class="fal fa-users"></i>
-                        <span class="nav-link-text" data-i18n="nav.user">@Localizer["User"]</span>
+                        <span class="nav-link-text" data-i18n="nav.userManagement">@Localizer["UserManagement"]</span>
                     </a>
+                    <ul>
+                        @if (User.HasClaim("Permission", "View_Role"))
+                        {
+                            <li class="@(Context.Request.Path.StartsWithSegments("/role") ? "active" : "")">
+                                <a asp-controller="role" asp-action="Index" title="@Localizer["role"]" data-filter-tags="role">
+                                    <i class="fal fa-user-tie"></i>
+                                    <span class="nav-link-text" data-i18n="nav.user">@Localizer["Role"]</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.HasClaim("Permission", "View_User"))
+                        {
+                            <li class="@(Context.Request.Path.StartsWithSegments("/user") ? "active" : "")">
+                                <a asp-controller="User" asp-action="Index" title="@Localizer["User"]" data-filter-tags="user">
+                                    <i class="fal fa-user"></i>
+                                    <span class="nav-link-text" data-i18n="nav.user">@Localizer["User"]</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
                 </li>
             }
+
         </ul>
         <div class="filter-message js-filter-message bg-success-600"></div>
     </nav>
