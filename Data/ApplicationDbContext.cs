@@ -25,7 +25,7 @@ namespace DotnetSkeletonApp.Data
         public DbSet<ApplicationRolePermission> RolePermissions { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
 
-        // public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
 
         public override Task<int> SaveChangesAsync(

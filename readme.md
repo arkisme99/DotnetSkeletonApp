@@ -40,13 +40,8 @@ dotnet user-secrets list
 # command make migrations (sesuai urutan)
 
 - dotnet ef dbcontext list
-- dotnet ef migrations add Initial --context ApplicationDbContext //ini jalankan kalau Folder Migration tidak ada
-- dotnet ef database update --context ApplicationDbContext // ini dijalankan juga saat setting awal
-
-# Migration Baru:
-
-- dotnet ef migrations add AddNewMigration --context ApplicationDbContext
-- dotnet ef database update --context ApplicationDbContext
+- dotnet ef migrations add Initial --context ApplicationDbContext //Initial maksudnya nama migrationnya
+- dotnet ef database update --context ApplicationDbContext // ini proses migrate ke database
 
 # websocket / signal R (kayanya ga perlu)
 
