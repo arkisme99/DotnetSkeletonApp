@@ -18,8 +18,8 @@ namespace DotnetSkeletonApp.Extensions
             services.AddScoped<AuthService>();
             services.AddScoped<RedirectIfAuthenticated>();
             services.AddScoped<NotificationService>();
+            services.AddScoped<UserService>();
             // services.AddScoped<IRoleService, RoleService>();
-            // services.AddScoped<IUserService, UserService>();
             // services.AddScoped<IActivityLogService, ActivityLogService>();
 
             return services;

@@ -1,3 +1,12 @@
+@using System.Security.Claims
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    var roles = User.Claims
+    .Where(c => c.Type == ClaimTypes.Role)
+    .Select(c => c.Value)
+    .ToList();
+}
 <aside class="page-sidebar">
     <div class="page-logo">
         <a href="" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
@@ -21,15 +30,15 @@
         </div>
         <div class="info-card pt-3" style="flex-direction: column !important">
             <div class="">
-                <img src="@ViewData["profileImage"]" class="profile-image rounded-circle " alt="Nama Lengkap"
+                <img src="@ViewData["profileImage"]" class="profile-image rounded-circle " alt="@User.Identity?.Name"
                     style="margin-top: 10px;">
             </div>
             <div class="info-card-text " style="margin-top: 10px; align-items: center">
                 <a href="" class="text-white">
-                    <span class="text-truncate text-truncate-sm d-inline-block">Nama Lengkap <i
+                    <span class="text-truncate text-truncate-sm d-inline-block">@User.Identity?.Name <i
                             class="fal fa-edit"></i></span>
                 </a>
-                <span class="text-truncate text-truncate-sm text-center">Administrator</span>
+                <span class="text-truncate text-truncate-sm text-center">@string.Join(", ", roles)</span>
             </div>
             <img src="~/sources/img/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
             <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle"
@@ -38,12 +47,21 @@
             </a>
         </div>
         <ul id="js-nav-menu" class="nav-menu">
-            <li class="active">
-                <a href="" title="Dashboard" data-filter-tags="dashboard">
+            <li class="@(Context.Request.Path.StartsWithSegments("/home") ? "active" : "")">
+                <a asp-controller="Home" asp-action="Index" title="@Localizer["Home"]" data-filter-tags="home">
                     <i class="fal fa-globe"></i>
-                    <span class="nav-link-text" data-i18n="nav.dashboard">Dashboard</span>
+                    <span class="nav-link-text" data-i18n="nav.home">@Localizer["Home"]</span>
                 </a>
             </li>
+            @if (User.HasClaim("Permission", "View_User"))
+            {
+                <li class="@(Context.Request.Path.StartsWithSegments("/user") ? "active" : "")">
+                    <a asp-controller="User" asp-action="Index" title="@Localizer["User"]" data-filter-tags="user">
+                        <i class="fal fa-users"></i>
+                        <span class="nav-link-text" data-i18n="nav.user">@Localizer["User"]</span>
+                    </a>
+                </li>
+            }
         </ul>
         <div class="filter-message js-filter-message bg-success-600"></div>
     </nav>

@@ -53,7 +53,7 @@ namespace DotnetSkeletonApp.Extensions
 
                         ctx.Response.Cookies.Append(
                         "notify_error",
-                        "Harus login dulu bro!",
+                        "Anda tidak memiliki akses!",
                         new CookieOptions
                         {
                             HttpOnly = true,
