@@ -67,6 +67,7 @@ public class HomeController(
         using (var connection = JobStorage.Current.GetConnection())
         {
             connection.SetJobParameter(jobId, "CreatorUserId", currentUserId);
+            connection.SetJobParameter(jobId, "JobNameNew", "Tes Kirim Email");
         }
 
         TempData["Notify.Type"] = "warning";

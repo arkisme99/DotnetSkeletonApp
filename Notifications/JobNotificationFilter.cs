@@ -3,58 +3,86 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DotnetSkeletonApp.Services;
 using Hangfire.Server;
 using Hangfire.States;
+using Hangfire.Storage;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DotnetSkeletonApp.Notifications
 {
     public class JobNotificationFilter(
-        IHubContext<JobNotificationHub> _hub
-        ) : IServerFilter, IElectStateFilter
+        IServiceScopeFactory _scopeFactory
+        ) : IApplyStateFilter
     {
-        // ✅ SUCCESS / ❌ FAILED
-        public void OnPerformed(PerformedContext context)
+        public async void OnStateApplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var _notifService = scope.ServiceProvider.GetRequiredService<NotificationService>();
+
+            var jobId = context.BackgroundJob.Id;
+            var userId = context.Connection.GetJobParameter(jobId, "CreatorUserId");
+            var jobName = context.Connection.GetJobParameter(jobId, "JobNameNew");
+
+            // Logika berdasarkan perubahan status
+            if (context.NewState is SucceededState)
+            {
+                await _notifService.AddNotificationAsync(userId, $"Proccess {jobName} Success", null, "JobSuccess");
+            }
+            else if (context.NewState is FailedState failedState)
+            {
+                await _notifService.AddNotificationAsync(userId, $"Proccess {jobName} Failed: {failedState.Exception.Message}", null, "JobFailed");
+            }
+            else if (context.NewState is ScheduledState && context.OldStateName == FailedState.StateName)
+            {
+                await _notifService.AddNotificationAsync(userId, $"Retry Proccess {jobName}", null, "JobRetry");
+            }
+        }
+
+        public void OnStateUnapplied(ApplyStateContext context, IWriteOnlyTransaction transaction)
+        {
+            // Tidak perlu diisi jika hanya ingin mencatat status baru
+        }
+        /* // ✅ SUCCESS / ❌ FAILED
+        public async void OnPerformed(PerformedContext context)
         {
             // Ambil dari connection storage
-            var userId = context.Connection.GetJobParameter(context.BackgroundJob.Id, "CreatorUserId");
+            var jobId = context.BackgroundJob.Id;
+            var userId = context.Connection.GetJobParameter(jobId, "CreatorUserId");
+            var jobName = context.Connection.GetJobParameter(jobId, "JobNameNew");
 
             if (context.Exception == null)
             {
-                _hub.Clients.Group(userId).SendAsync("JobSuccess", new
-                {
-                    JobId = context.BackgroundJob.Id,
-                    Job = context.BackgroundJob.Job.Type.Name
-                });
+                await _notifService.AddNotificationAsync(userId, $"Proccess {jobName} Success", null, "JobSuccess");
             }
             else
             {
-                _hub.Clients.Group(userId).SendAsync("JobFailed", new
-                {
-                    JobId = context.BackgroundJob.Id,
-                    Error = context.Exception.Message
-                });
+                await _notifService.AddNotificationAsync(userId, $"Proccess {jobName} Failed", null, "JobFailed");
             }
         }
 
         public void OnPerforming(PerformingContext context) { }
 
         // 🔁 RETRY
-        public void OnStateElection(ElectStateContext context)
+        public async void OnStateElection(ElectStateContext context)
         {
-            // Ambil dari connection storage
-            var userId = context.Connection.GetJobParameter(context.BackgroundJob.Id, "CreatorUserId");
+            // Tidak dipakai deh karena retry, cukup sukses / failed saja kayanya
+            var jobId = context.BackgroundJob.Id;
+            var userId = context.Connection.GetJobParameter(jobId, "CreatorUserId");
+            var jobName = context.Connection.GetJobParameter(jobId, "JobNameNew");
 
             if (context.CandidateState is FailedState failed &&
                 failed.Exception != null)
             {
-                _hub.Clients.Group(userId).SendAsync("JobRetry", new
-                {
-                    JobId = context.BackgroundJob.Id,
-                    Error = failed.Exception.Message,
-                    // RetryCount = failed.RetryCount
-                });
+                // _hub.Clients.Group(userId).SendAsync("JobRetry", new
+                // {
+                //     JobId = context.BackgroundJob.Id,
+                //     Error = failed.Exception.Message,
+                //     RetryCount = failed.RetryCount
+                // });
+
+                // await _notifService.AddNotificationAsync(userId, $"Proccess Retry {jobName}", null, "JobRetry");
             }
-        }
+        } */
     }
 }

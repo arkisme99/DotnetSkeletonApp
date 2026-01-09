@@ -16,5 +16,6 @@ namespace DotnetSkeletonApp.Models
         public string Message { get; set; } = string.Empty;
         public string? FileUrl { get; set; }
         public bool IsRead { get; set; } = false;
+        public string MethodName { get; set; } = string.Empty;
     }
 }

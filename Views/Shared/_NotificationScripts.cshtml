@@ -19,51 +19,64 @@
 
     connection.on("ReceiveNotification", function (data) {
         countGlobal++
-        const msg = `✅ ${JSON.stringify(data)}`;
-        addNotificationToList(msg);
+        const msg = `${data.message}`;
+        toastr.success(msg);
+        addNotificationToList(data);
         @* console.log(`Data Notif ${JSON.stringify(data)}`); *@
     });
 
     connection.on("JobSuccess", data => {
         countGlobal++
-        const msg = `Job ${data.job} sukses ✅`;
-        addNotificationToList(msg);
+        const msg = `${data.message}`;
         toastr.success(msg);
+        addNotificationToList(data);
     });
 
     connection.on("JobFailed", data => {
         countGlobal++
-        const msg = `Job gagal: ${data.error}`;
-        addNotificationToList(msg);
+        const msg = `${data.message}`;
         toastr.error(msg);
+        addNotificationToList(data);
     });
 
     connection.on("JobRetry", data => {
         countGlobal++
-        const msg = `Job retry #${data.retryCount}`;
-        addNotificationToList(msg);
+        const msg = `${data.message}`;
         toastr.warning(msg);
+        addNotificationToList(data);
     });
 
 
 
-    function addNotificationToList(message) {
-        const timestamp = new Date().toLocaleTimeString();
+    function addNotificationToList(data) {
+
+        let linkFile = '';
+
+        if (data.fileUrl === null) {
+            linkFile = '';
+        } else {
+            linkFile = `<a href="${data.fileUrl}">download</a>`;
+        }
+
+        const dateObj = new Date(data.time);
+
+        const localDateTime = dateObj.toLocaleString('id-ID', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+        });
+
+        @* console.log(`localDateTime: ${localDateTime}`); *@
 
         // Template li (tambahkan styling CSS sesuai selera)
         const listItem = `
             <li class="unread">
                 <div class="d-flex align-items-center show-child-on-hover">
                     <span class="d-flex flex-column flex-1">
-                    <span class="name d-flex align-items-center"
-                        >Administrator
-                        <span class="badge badge-success fw-n ml-1">UPDATE</span></span
-                    >
-                    <span class="msg-a fs-sm">
-                        ${message}
-                        <a href="docs_buildnotes.html">(patch notes)</a>
-                    </span>
-                    <span class="fs-nano text-muted mt-1">${timestamp}</span>
+                        <span class="msg-a fs-sm">
+                            ${data.message}
+                            ${linkFile}
+                        </span>
+                        <span class="fs-nano text-muted mt-1">${localDateTime}</span>
                     </span>
                     <div
                     class="show-on-hover-parent position-absolute pos-right pos-bottom p-3"
