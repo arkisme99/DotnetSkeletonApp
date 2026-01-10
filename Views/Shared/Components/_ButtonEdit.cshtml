@@ -1,0 +1,5 @@
+@if (User.HasClaim("Permission", $"Edit_{ViewData["currentController"]}"))
+{
+    <a href="PLACEHOLDER_LINK" class="dropdown-item delete-record" data-toggle="tooltip" data-placement="bottom"
+        data-original-title="Edit Data" data-trigger="hover"><i class="fal fa-edit"></i> Edit</a>
+}

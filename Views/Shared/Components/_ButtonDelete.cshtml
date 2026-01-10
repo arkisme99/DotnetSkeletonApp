@@ -1,0 +1,6 @@
+@if (User.HasClaim("Permission", $"Delete_{ViewData["currentController"]}"))
+{
+    <a class="dropdown-item delete-record" href="javascript:;" data-toggle="tooltip" data-placement="bottom"
+        data-original-title="Delete Data" data-trigger="hover" data-id="PLACEHOLDER_DATA_ID"
+        data-title="PLACEHOLDER_DATA_TITLE"><i class="fal fa-trash"></i> Delete</a>
+}
