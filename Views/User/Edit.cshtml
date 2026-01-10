@@ -1,6 +1,43 @@
-﻿@model Guid
+﻿@using DotnetSkeletonApp.Models.UserModels
+@using DotnetSkeletonApp.Models.ViewModels
+@using Microsoft.Extensions.Localization
+@model ApplicationUser
+@inject IStringLocalizer<SharedResource> Localizer
 @{
     Layout = "Crud/_CEdit";
+
+    var inputGroupEmail = new InputGroupViewModel
+    {
+        Label = @Localizer["Username"],
+        Type = "email",
+        Name = "Email",
+        Id = "Email",
+        PlaceHolder = @Localizer["Enter your Email"],
+        Attributes = $"value=\"{Model.UserName}\" required readonly",
+        Icon = "fal fa-envelope"
+    };
+
+    var inputGroupFullname = new InputGroupViewModel
+    {
+        Label = @Localizer["Full Name"],
+        Name = "FullName",
+        Id = "FullName",
+        PlaceHolder = @Localizer["Enter your full name"],
+        Attributes = $"value=\"{Model.FullName}\" autofocus required",
+        Icon = "fal fa-user"
+    };
+
+    var inputGroupPhoneNumber = new InputGroupViewModel
+    {
+        Label = @Localizer["Phone Number"],
+        Name = "PhoneNumber",
+        Id = "PhoneNumber",
+        PlaceHolder = @Localizer["Enter your phone number"],
+        Attributes = $"value=\"{Model.PhoneNumber}\"",
+        Icon = "fal fa-phone"
+    };
 }
 
-<h3>Edit User @Model</h3>
+@await Html.PartialAsync("Components/_InputGroup", inputGroupEmail)
+@await Html.PartialAsync("Components/_InputGroup", inputGroupFullname)
+@await Html.PartialAsync("Components/_InputGroup", inputGroupPhoneNumber)

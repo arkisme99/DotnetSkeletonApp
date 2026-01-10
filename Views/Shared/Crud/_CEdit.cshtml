@@ -6,12 +6,14 @@
     Layout = "Crud/_CardLayout";
 }
 
-<form asp-controller="" asp-action="" method="post" id="formProccess">
+<form asp-controller="@ViewData["currentController"]" asp-action="Edit" method="post" id="formProccess">
     @RenderBody()
+
+    @await Html.PartialAsync("Components/_SubmitSave")
 </form>
 
 @section TitleInfo {
-    <i class="fal fa-pencil"></i>&nbsp;@Localizer["EditData"] @ViewData["Title"] : @Model
+    <i class="fal fa-pencil"></i>&nbsp;@Localizer["EditData"] @ViewData["Title"]
 }
 
 @section PanelToolbar {
@@ -23,7 +25,16 @@
 }
 
 @section Scripts {
+    <script src="~/helpers/js/form-handler.js"></script>
 
+    <script>
+        $(function () {
+            handleFormSubmission({
+                formSelector: '#formProccess',
+                buttonSelector: '#btnSave'
+            });
+        });
+    </script>
 }
 
 @section HeaderInfo {

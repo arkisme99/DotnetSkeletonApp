@@ -75,4 +75,7 @@
   <data name="YaKeluar">
     <value>Yes, Logout</value>
   </data>
+  <data name="Full Name">
+    <value>Full Name</value>
+  </data>
 </root>

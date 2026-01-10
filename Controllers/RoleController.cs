@@ -9,16 +9,19 @@ using DotnetSkeletonApp.Models.UserModels;
 using DotnetSkeletonApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace DotnetSkeletonApp.Controllers
 {
     [Authorize]
     public class RoleController(
         ILogger<BaseCrudController<ApplicationRole, RoleService>> logger,
-        RoleService roleService
+        RoleService roleService,
+        IStringLocalizer<SharedResource> _localizer
     ) : BaseCrudController<ApplicationRole, RoleService>(
         logger,
-        roleService
+        roleService,
+        _localizer
         )
     {
         [HasPermission("View_Role")]

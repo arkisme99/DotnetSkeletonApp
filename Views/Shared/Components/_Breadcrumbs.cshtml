@@ -3,19 +3,22 @@
 
 <ol class="breadcrumb page-breadcrumb">
 
-    @foreach (var item in Model)
+    @if (Model != null)
     {
-        if (item.Active == true)
+        @foreach (var item in Model)
         {
-            <li class="breadcrumb-item active">@item.Label</li>
-        }
-        else
-        {
-            <li class="breadcrumb-item">
-                <a asp-controller="@item.AspController" asp-action="@item.Action">@item.Label</a>
-            </li>
-        }
+            if (item.Active == true)
+            {
+                <li class="breadcrumb-item active">@item.Label</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item">
+                    <a asp-controller="@item.AspController" asp-action="@item.Action">@item.Label</a>
+                </li>
+            }
 
+        }
     }
 
 

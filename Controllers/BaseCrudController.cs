@@ -7,12 +7,14 @@ using DotnetSkeletonApp.Helpers;
 using DotnetSkeletonApp.Models.ViewModels;
 using DotnetSkeletonApp.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace DotnetSkeletonApp.Controllers
 {
     public abstract class BaseCrudController<TModel, TService>(
         ILogger<BaseCrudController<TModel, TService>> logger,
-        TService service
+        TService service,
+        IStringLocalizer<SharedResource> localizer
     ) : BaseController
         where TModel : class
         where TService : BaseCrudService<TModel>
@@ -21,6 +23,7 @@ namespace DotnetSkeletonApp.Controllers
         protected virtual string ControllerName => Request.RouteValues["controller"]?.ToString() ?? "";
         protected readonly TService _service = service;
         protected readonly ILogger<BaseCrudController<TModel, TService>> _logger = logger;
+        protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
 
         private List<BreadcrumbsViewModel> GetBaseBreadcrumbs()
         {
@@ -64,18 +67,35 @@ namespace DotnetSkeletonApp.Controllers
             return View();
         }
 
-        public virtual IActionResult Edit(Guid id)
+        public virtual async Task<IActionResult> Edit(Guid Id)
         {
-            // Di sini false, karena kita tambah level "Tambah" yang true
             var breadcrumbs = GetBaseBreadcrumbs();
             breadcrumbs.Add(new BreadcrumbsViewModel($"Edit {ControllerName}", true, ControllerName, "Edit"));
             SetBreadcrumbs([.. breadcrumbs]);
 
-            // var product = await _service.GetByIdAsync(id);
-            // if (product == null) return NotFound();
-            // return View(product);
+            var DataModel = await _service.GetByIdAsync(Id);
+            if (DataModel == null) return NotFound();
+            return View(DataModel);
+        }
 
-            return View(id);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> Edit(Guid id, TModel tmodel)
+        {
+            // Menggunakan cast ke dynamic untuk "memaksa" akses ke properti Id, dari pada bikin Interface
+            var modelId = (Guid)((dynamic)tmodel).Id;
+
+            if (id != modelId) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                await _service.UpdateAsync(tmodel);
+
+                TempData["Notify.Type"] = "success";
+                TempData["Notify.Message"] = _localizer["PesanUbahSukses"].Value;
+                return RedirectToAction(nameof(Index));
+            }
+            return View(tmodel);
         }
 
         protected virtual Dictionary<string, Expression<Func<TModel, object>>> GetColumnMap()
