@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using FluentValidation.AspNetCore;
 
 namespace DotnetSkeletonApp.Extensions
 {
@@ -13,7 +14,9 @@ namespace DotnetSkeletonApp.Extensions
         {
             services.AddLocalization(opt => opt.ResourcesPath = "Resources");
 
-            services.AddControllersWithViews()
+            services.AddFluentValidationAutoValidation()
+                // .AddValidatorsFromAssemblyContaining<ProductValidator>()
+                .AddControllersWithViews()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization();
 

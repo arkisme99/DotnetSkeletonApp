@@ -6,6 +6,7 @@
     <UserSecretsId>af5097fa-e6a1-4b2e-9981-b13dc60dbd2c</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
     <PackageReference Include="Hangfire" Version="1.8.21" />
     <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
     <PackageReference Include="MailKit" Version="4.13.0" />

@@ -43,9 +43,9 @@ dotnet user-secrets list
 - dotnet ef migrations add Initial --context ApplicationDbContext //Initial maksudnya nama migrationnya
 - dotnet ef database update --context ApplicationDbContext // ini proses migrate ke database
 
-# websocket / signal R (kayanya ga perlu)
+# Validator Pakai Fluent Validation
 
-- dotnet dev-certs https --trust
+- Ada di Folder Validator
 
 # run / start
 
