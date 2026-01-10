@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DotnetSkeletonApp.Helpers;
 using DotnetSkeletonApp.Models.ViewModels;
 using DotnetSkeletonApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetSkeletonApp.Controllers
 {
-    public class BaseCrudController<TModel, TService>(
+    public abstract class BaseCrudController<TModel, TService>(
         ILogger<BaseCrudController<TModel, TService>> logger,
         TService service
     ) : BaseController
@@ -19,17 +21,6 @@ namespace DotnetSkeletonApp.Controllers
         protected virtual string ControllerName => Request.RouteValues["controller"]?.ToString() ?? "";
         protected readonly TService _service = service;
         protected readonly ILogger<BaseCrudController<TModel, TService>> _logger = logger;
-
-        /* public virtual async Task<IActionResult> Index()
-        {
-
-            // SetBreadcrumbs(BreadcrumbItems);
-
-            _logger.LogInformation($"Masuk Ke Index {_service!.GetType().Name}");
-
-            var data = await _service.GetAllData();
-            return Ok(new { count = data.Count, items = data });
-        } */
 
         private List<BreadcrumbsViewModel> GetBaseBreadcrumbs()
         {
@@ -58,6 +49,36 @@ namespace DotnetSkeletonApp.Controllers
             SetBreadcrumbs([.. breadcrumbs]);
 
             return View();
+        }
+
+        protected virtual Dictionary<string, Expression<Func<TModel, object>>> GetColumnMap()
+        {
+            // Defaultnya kosong, anak tidak wajib override
+            return [];
+        }
+
+        [HttpPost]
+        public virtual IActionResult GetDataTable()
+        {
+            var req = DataTableHelper.GetDataTableRequest(Request);
+
+            var columnMap = GetColumnMap();
+
+            var query = _service.GetQueryAble()
+                                .ApplyDataTableRequest(req, columnMap);
+
+            // var sqlnya = query.ToQueryString();
+            var recordsTotal = query.Count();
+            var data = query.Skip(req.Start).Take(req.Length).ToList();
+
+            return Json(new DataTableResponse<TModel>
+            {
+                Draw = req.Draw,
+                RecordsFiltered = recordsTotal,
+                RecordsTotal = recordsTotal,
+                // QueryString = sqlnya,
+                Data = data,
+            });
         }
     }
 }

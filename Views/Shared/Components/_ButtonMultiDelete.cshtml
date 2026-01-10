@@ -1,5 +1,6 @@
 @if (User.HasClaim("Permission", $"MultiDelete_{ViewData["currentController"]}"))
 {
-    <a href="javascript:;" class="btn btn-sm btn-danger btn-icon waves-effect waves-themed" onclick="hapusmulti()"><i
+    <a href="javascript:;" class="btn btn-sm btn-danger btn-icon waves-effect waves-themed" onclick="hapusmulti()"
+        data-toggle="tooltip" data-placement="bottom" data-original-title="Delete Choose Data" data-trigger="hover"><i
             class="fal fa-trash"></i></a>
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Data;
 using DotnetSkeletonApp.Models.UserModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotnetSkeletonApp.Services
 {
@@ -13,6 +14,13 @@ namespace DotnetSkeletonApp.Services
         _context
     )
     {
-
+        public override IQueryable<ApplicationUser> GetQueryAble()
+        {
+            // Ini seperti User::with('roles')->get() di Laravel
+            return _context.Set<ApplicationUser>()
+                           .Include(u => u.UserRoles)
+                           //   .ThenInclude(ur => ur.Role)
+                           .AsQueryable();
+        }
     }
 }

@@ -12,11 +12,13 @@ namespace DotnetSkeletonApp.Models.UserModels
         public string? FullName { get; set; }
         public string? Photo { get; set; }
 
-        DateTime? CreatedAt { get; set; }
-        DateTime? UpdatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         //soft delete
-        bool IsDeleted { get; set; }
-        DateTime? DeletedAt { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+
+        public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; } = [];
     }
 }

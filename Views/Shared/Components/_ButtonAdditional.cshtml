@@ -1,6 +1,7 @@
 <a href="#" class="btn btn-default btn-sm btn-icon waves-effect waves-themed" data-toggle="dropdown"
     aria-haspopup="true" aria-expanded="false">
-    <i class="fal fa-ellipsis-v"></i>
+    <i class="fal fa-ellipsis-v" data-toggle="tooltip" data-placement="bottom" data-original-title="Others"
+        data-trigger="hover"></i>
 </a>
 <div class="dropdown-menu" style="">
     @if (User.HasClaim("Permission", $"Export_{ViewData["currentController"]}"))

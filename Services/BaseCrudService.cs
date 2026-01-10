@@ -9,10 +9,11 @@ using Microsoft.EntityFrameworkCore;
 namespace DotnetSkeletonApp.Services
 {
     public class BaseCrudService<TModel>(
-        ApplicationDbContext _context
+        ApplicationDbContext context
     ) where TModel : class
     {
-        public virtual IQueryable<TModel> GetAll()
+        protected readonly ApplicationDbContext _context = context;
+        public virtual IQueryable<TModel> GetQueryAble()
         {
             return _context.Set<TModel>().AsQueryable();
         }

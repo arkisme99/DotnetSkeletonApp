@@ -1,18 +1,75 @@
 ﻿@using DotnetSkeletonApp.Models.ViewModels
 @{
     Layout = "Crud/_CTable";
+    ViewData["IdTable"] = "tableRole";
+    ViewData["OrderColumn"] = 1;
 }
+
 <thead>
     <tr>
         <th width="5%"><input type="checkbox" id="checkAll"></th>
         <th width="15%">Name</th>
-        <th width="15%">Document</th>
-        <th width="15%">Signature</th>
-        <th width="10%"></th>
+        <th width="15%">Description</th>
+        <th width="15%">Updated At</th>
+        <th width="10%">Action</th>
     </tr>
 </thead>
 <tbody>
 </tbody>
+
+@section Scripts {
+    <script>
+        let columns = [{
+            data: 'id',
+            orderable: false,
+            searchable: false,
+            width: '51px',
+            render: function (data, type, row, meta) {
+                let check = `<input name='idpilih[]' type="checkbox" id="checkItem" value="${row.id}">`;
+                return check;
+            }
+        },
+        {
+            data: 'name',
+            width: '141px',
+            render: function (data, type, row, meta) {
+                return `${row.name}`;
+            }
+        },
+        {
+            data: 'description',
+            width: '141px',
+            render: function (data, type, row, meta) {
+                return `${row.description}`;
+            }
+        },
+        {
+            data: 'updatedAt',
+            width: '141px',
+            render: function (data, type, row, meta) {
+                return `${row.updatedAt}`;
+            }
+        },
+        {
+            data: 'id',
+            orderable: false,
+            searchable: false,
+            width: '110px',
+            render: function (data, type, row, meta) {
+                let id = row.id;
+                let title = `${row.name}`;
+                let html = '';
+
+                let editUrl = "@ViewData["currentController"]/Edit/:id";
+                editUrl = editUrl.replace(':id', id);
+
+                html += ``
+                return html;
+            }
+        }
+        ];
+    </script>
+}
 
 @section HeaderInfo {
     @* <div class="row">

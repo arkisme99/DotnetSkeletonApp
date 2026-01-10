@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Helpers.Authorization;
 using DotnetSkeletonApp.Models;
@@ -24,13 +25,19 @@ namespace DotnetSkeletonApp.Controllers
         public override IActionResult Index() => base.Index();
         [HasPermission("Create_User")]
         public override IActionResult Create() => base.Create();
-
-        /* public override async Task<IActionResult> Index()
+        protected override Dictionary<string, Expression<Func<ApplicationUser, object>>> GetColumnMap()
         {
-            _logger.LogInformation($"Masuk Ke Index Override {_service!.GetType().Name}");
-
-            var data = await _service.GetAllData();
-            return Ok(new { count = data.Count, items = data });
-        } */
+            return new Dictionary<string, Expression<Func<ApplicationUser, object>>>
+            {
+                ["id"] = p => p.Id,
+                ["fullName"] = p => p.FullName!,
+                ["userName"] = p => p.UserName!,
+                ["photo"] = p => p.Photo!,
+                ["createdAt"] = p => p.CreatedAt!,
+                ["updatedAt"] = p => p.UpdatedAt!
+            };
+        }
+        [HasPermission("View_User")]
+        public override IActionResult GetDataTable() => base.GetDataTable();
     }
 }

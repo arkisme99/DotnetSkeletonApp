@@ -114,6 +114,14 @@ namespace DotnetSkeletonApp.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<ApplicationUser>(user =>
+            {
+                user.HasMany(e => e.UserRoles)
+                    .WithOne()
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+            });
+
             builder.Entity<ApplicationRolePermission>()
                 .HasKey(rp => new { rp.RoleId, rp.PermissionId });
 

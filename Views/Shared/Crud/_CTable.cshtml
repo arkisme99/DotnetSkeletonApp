@@ -6,9 +6,14 @@
     Layout = "Crud/_CardLayout";
 }
 
-<table id="example" class="table table-bordered table-striped table-hover" style="width: 100%;">
-    @RenderBody()
-</table>
+<div class="table-responsive">
+    <table id="@(ViewData["IdTable"] ?? "ExampleTable")" class="table table-bordered table-striped table-hover"
+        style="width: 100%;">
+        @RenderBody()
+    </table>
+</div>
+
+<input type="hidden" name="orderColumn" id="orderColumn" value="@(ViewData["OrderColumn"] ?? 0)">
 
 @section TitleInfo {
     <i class="fal fa-table"></i>&nbsp;@Localizer["Data"] @ViewData["Title"]
@@ -24,15 +29,129 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/sources/css/datagrid/datatables/datatables.bundle.css">
+
+    @RenderSection("Styles", required: false)
 }
 
 @section Scripts {
     <script src="~/sources/js/datagrid/datatables/datatables.bundle.js"></script>
     <script>
         $(function () {
-            $("#example").DataTable()
+
+            let dtURL = "/@ViewData["currentController"]/GetDataTable";
+
+            let options = {};
+
+            let stringIdTable = "#@(ViewData["IdTable"] ?? "ExampleTable")";
+
+            let orderColumn = parseInt($('#orderColumn').val());
+
+            function debounce(func, wait = 500) {
+                let timeout;
+                return function (...args) {
+                    const context = this;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), wait);
+                };
+            }
+
+            let initCompletee = function () {
+                const table = this.api();
+                const headerRow = $(`${stringIdTable} thead tr`).clone(true).appendTo(`${stringIdTable} thead`); // duplikasi baris header
+
+                // Tambahkan input filter di baris kedua
+                headerRow.find('th').each(function (index) {
+                    var colSettings = table.settings()[0].aoColumns[index];
+
+                    // kalau kolom tidak searchable → kosongkan
+                    if (colSettings && colSettings.bSearchable === false) {
+                        $(this).html('');
+                        return; // lanjut ke kolom berikutnya
+                    }
+
+                    const title = $(this).text();
+                    const keywords = [
+                        '{{ strtolower(__("Created At")) }}',
+                        '{{ strtolower(__("Updated At")) }}',
+                        '{{ strtolower(__("Ueleted At")) }}',
+                        '{{ strtolower(__("Uxpired At")) }}',
+                        '{{ strtolower(__("Date")) }}'
+                    ].map(k => k.toLowerCase());
+
+                    if (keywords.some(key => title.toLowerCase().includes(key))) {
+                        $(this).html('<input type="date" class="form-control form-control-sm" placeholder="Filter ' + title + '" />');
+                    } else {
+                        $(this).html('<input type="text" class="form-control form-control-sm" placeholder="Filter ' + title + '" />');
+                    }
+
+                    const debouncedSearch = debounce(function () {
+                        if (table.column(index).search() !== this.value) {
+                            table.column(index).search(this.value).draw();
+                        }
+                    }, 500);
+
+                    $('input', this).on('keyup change clear', debouncedSearch);
+                });
+
+                $(`${stringIdTable} thead tr:eq(1) th`).off('click.DT');
+
+                // Search global dengan debounce
+                const globalSearchInput = $('div.dataTables_filter input');
+                if (globalSearchInput.length) {
+                    const debouncedGlobalSearch = debounce(function () {
+                        table.search(this.value).draw();
+                    }, 500);
+                    globalSearchInput.off('keyup').on('keyup', debouncedGlobalSearch);
+                }
+            }
+
+            let table = $(stringIdTable).DataTable({
+                // autoWidth: true,
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                fixedHeader: true,
+                colResize: options,
+                ajax: {
+                    url: dtURL,
+                    type: "POST",
+                    data: function (d) { }
+                },
+                createdRow: function (row, data, dataIndex, cells) {
+                    $(row).attr("data-id", row.id);
+                },
+                order: [orderColumn, 'desc'],
+                columns: columns,
+                // buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                initComplete: initCompletee,
+            });
+
+            table.columns.adjust().draw();
+
+            $("#checkAll").click(function () {
+                $('input:checkbox').not(this).prop('checked', this.checked);
+            });
+
+            $(document).on('click', '.delete-record', function (e) {
+                var id = $(this).attr("data-id");
+                var title = $(this).attr("data-title");
+                let deleteUrl = "@ViewData["currentController"]/Destroy/:id";
+                deleteUrl = deleteUrl.replace(':id', id);
+
+                $('#formHapus').attr('action', deleteUrl);
+                $('#content').html(`${title}`);
+                $('#modal-delete').modal('show');
+            });
+
+            $(".frm-delete").submit(function (e) {
+                // e.preventDefault();
+                $('.delete').html(`<x-loading-icon />`);
+                $('.delete').prop('disabled', true);
+            });
         })
     </script>
+
+    @RenderSection("Scripts", required: false)
 }
 
 @section HeaderInfo {
