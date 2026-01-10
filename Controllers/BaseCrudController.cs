@@ -31,6 +31,19 @@ namespace DotnetSkeletonApp.Controllers
             ];
         }
 
+        // String konstan untuk folder (opsional)
+        protected const string UploadDir = "others";
+
+        protected async Task<string?> ProcessUpload(IFormFile file, string subFolder)
+        {
+            return await FileHelper.UploadFile(file, subFolder);
+        }
+
+        protected void ProcessDelete(string fileName, string subFolder)
+        {
+            FileHelper.DeleteFile(fileName, subFolder);
+        }
+
         public virtual IActionResult Index()
         {
             var breadcrumbs = GetBaseBreadcrumbs();
@@ -49,6 +62,20 @@ namespace DotnetSkeletonApp.Controllers
             SetBreadcrumbs([.. breadcrumbs]);
 
             return View();
+        }
+
+        public virtual IActionResult Edit(Guid id)
+        {
+            // Di sini false, karena kita tambah level "Tambah" yang true
+            var breadcrumbs = GetBaseBreadcrumbs();
+            breadcrumbs.Add(new BreadcrumbsViewModel($"Edit {ControllerName}", true, ControllerName, "Edit"));
+            SetBreadcrumbs([.. breadcrumbs]);
+
+            // var product = await _service.GetByIdAsync(id);
+            // if (product == null) return NotFound();
+            // return View(product);
+
+            return View(id);
         }
 
         protected virtual Dictionary<string, Expression<Func<TModel, object>>> GetColumnMap()
