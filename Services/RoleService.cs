@@ -119,5 +119,22 @@ namespace DotnetSkeletonApp.Services
 
             return model;
         }
+
+        protected override async Task<ApplicationRole> BeforeDeleteAsync(ApplicationRole role)
+        {
+            // Cek apakah ada user yang masih pakai role ini
+            bool hasUsers = await _context.UserRoles.AnyAsync(ur => ur.RoleId == role.Id);
+            if (hasUsers)
+                throw new Exception("Role is assigned to users, cannot delete");
+
+            // 🗑 Hapus RolePermissions
+            var rolePermissions = _context.RolePermissions.Where(rp => rp.RoleId == role.Id);
+
+            _context.RolePermissions.RemoveRange(rolePermissions);
+
+            await _context.SaveChangesAsync();
+
+            return role;
+        }
     }
 }

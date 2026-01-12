@@ -77,6 +77,16 @@ namespace DotnetSkeletonApp.Services
             return model;
         }
 
+        protected virtual async Task<TModel> BeforeDeleteAsync(TModel model)
+        {
+            return model;
+        }
+
+        protected virtual async Task<TModel> AfterDeleteAsync(TModel model)
+        {
+            return model;
+        }
+
         public virtual async Task<TModel> CreateAsync(TModel tmodel, IFormCollection RawFormData)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -115,6 +125,32 @@ namespace DotnetSkeletonApp.Services
 
                 await transaction.CommitAsync();
                 return tmodel;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task DeleteAsync(TKey Id)
+        {
+
+            var tmodel = await GetByIdAsync(Id) ?? throw new Exception("Data not found");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                tmodel = await BeforeDeleteAsync(tmodel);
+
+                _context.Set<TModel>().Remove(tmodel);
+
+                await _context.SaveChangesAsync();
+
+                tmodel = await AfterDeleteAsync(tmodel);
+
+                // Commit transaction
+                await transaction.CommitAsync();
             }
             catch
             {

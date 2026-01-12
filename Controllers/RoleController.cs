@@ -30,6 +30,12 @@ namespace DotnetSkeletonApp.Controllers
         [HasPermission("Create_Role")]
         public override async Task<IActionResult> Create() => await base.Create();
 
+        [HasPermission("Edit_Role")]
+        public override async Task<IActionResult> Edit(string id) => await base.Edit(id);
+
+        [HasPermission("Delete_Role")]
+        public override async Task<IActionResult> Delete(string Id) => await base.Delete(Id);
+
         protected override Dictionary<string, Expression<Func<ApplicationRole, object>>> GetColumnMap()
         {
             return new Dictionary<string, Expression<Func<ApplicationRole, object>>>

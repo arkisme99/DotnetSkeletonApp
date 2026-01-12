@@ -135,6 +135,27 @@ namespace DotnetSkeletonApp.Controllers
             return View(tmodel);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> Delete(TKey Id)
+        {
+            try
+            {
+                await _service.DeleteAsync(Id);
+
+                TempData["Notify.Type"] = "info";
+                TempData["Notify.Message"] = _localizer["PesanHapusSukses"].Value;
+            }
+            catch (Exception ex)
+            {
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = ex.Message;
+
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         protected virtual Dictionary<string, Expression<Func<TModel, object>>> GetColumnMap()
         {
             // Defaultnya kosong, anak tidak wajib override

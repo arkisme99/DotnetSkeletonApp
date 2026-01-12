@@ -1,9 +1,14 @@
+@using Microsoft.AspNetCore.Html
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> Localizer
 
 @{
     // Menghubungkan ke Master Layout
     Layout = "Crud/_CardLayout";
+
+    var contentModalDelete = new HtmlString(@"<p>Anda yakin ingin hapus data ?</p><p id='content'></p> ");
+    var idModalDelete = new ViewDataDictionary(ViewData) { { "ModalId", "modal-delete" }, { "FormId", "formHapus" } };
+
 }
 
 <div class="table-responsive">
@@ -14,6 +19,8 @@
 </div>
 
 <input type="hidden" name="orderColumn" id="orderColumn" value="@(ViewData["OrderColumn"] ?? 0)">
+
+@await Html.PartialAsync("Components/_ModalDelete", contentModalDelete, idModalDelete)
 
 @section TitleInfo {
     <i class="fal fa-table"></i>&nbsp;@Localizer["Data"] @ViewData["Title"]
@@ -135,7 +142,7 @@
             $(document).on('click', '.delete-record', function (e) {
                 var id = $(this).attr("data-id");
                 var title = $(this).attr("data-title");
-                let deleteUrl = "@ViewData["currentController"]/Destroy/:id";
+                let deleteUrl = "/@ViewData["currentController"]/Delete/:id";
                 deleteUrl = deleteUrl.replace(':id', id);
 
                 $('#formHapus').attr('action', deleteUrl);
