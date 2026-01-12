@@ -1,0 +1,14 @@
+@using DotnetSkeletonApp.Models.ViewModels
+@model CardComponentViewModel
+
+<div class="panel">
+    <div class="panel-hdr bg-secondary">
+        <h2 class="text-white">@Model.Title</h2>
+        <div class="panel-toolbar"></div>
+    </div>
+    <div class="panel-container">
+        <div class="panel-content">
+            @Model.Body
+        </div>
+    </div>
+</div>

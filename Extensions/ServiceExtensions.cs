@@ -20,6 +20,7 @@ namespace DotnetSkeletonApp.Extensions
             services.AddScoped<NotificationService>();
             services.AddScoped<UserService>();
             services.AddScoped<RoleService>();
+            services.AddScoped<PermissionService>();
             // services.AddScoped<IActivityLogService, ActivityLogService>();
 
             return services;

@@ -6,8 +6,11 @@
     Layout = "Crud/_CardLayout";
 }
 
-<form asp-controller="" asp-action="" method="post" id="formProccess">
+<form asp-controller="@ViewData["currentController"]" asp-action="@(ViewData["actionForm"] ?? "Create")" method="post"
+    id="formProccess" enctype="@ViewData["attributeForm"]">
     @RenderBody()
+
+    @await Html.PartialAsync("Components/_SubmitSave")
 </form>
 
 @section TitleInfo {
@@ -19,11 +22,24 @@
 }
 
 @section Styles {
-
+    @* Salurkan section Styles dari Index ke _Layout *@
+    @RenderSection("Styles", required: false)
 }
 
 @section Scripts {
+    <script src="~/helpers/js/form-handler.js"></script>
 
+    @* Salurkan section Scripts dari Index ke _Layout *@
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        $(function () {
+            handleFormSubmission({
+                formSelector: '#formProccess',
+                buttonSelector: '#btnSave'
+            });
+        });
+    </script>
 }
 
 @section HeaderInfo {

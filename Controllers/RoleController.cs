@@ -27,7 +27,7 @@ namespace DotnetSkeletonApp.Controllers
         [HasPermission("View_Role")]
         public override IActionResult Index() => base.Index();
         [HasPermission("Create_Role")]
-        public override IActionResult Create() => base.Create();
+        public override async Task<IActionResult> Create() => await base.Create();
 
         protected override Dictionary<string, Expression<Func<ApplicationRole, object>>> GetColumnMap()
         {

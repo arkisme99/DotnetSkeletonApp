@@ -35,7 +35,7 @@ namespace DotnetSkeletonApp.Controllers
         [HasPermission("View_User")]
         public override IActionResult Index() => base.Index();
         [HasPermission("Create_User")]
-        public override IActionResult Create() => base.Create();
+        public override async Task<IActionResult> Create() => await base.Create();
         protected override Dictionary<string, Expression<Func<ApplicationUser, object>>> GetColumnMap()
         {
             return new Dictionary<string, Expression<Func<ApplicationUser, object>>>

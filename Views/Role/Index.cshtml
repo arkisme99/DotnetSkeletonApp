@@ -63,7 +63,13 @@
                 let editUrl = "@ViewData["currentController"]/Edit/:id";
                 editUrl = editUrl.replace(':id', id);
 
-                html += ``
+                let buttonActions = $("#tpl-button-actions").html();
+                buttonActions = buttonActions.replace('PLACEHOLDER_LINK', editUrl);
+                buttonActions = buttonActions.replace('PLACEHOLDER_DATA_ID', id);
+                buttonActions = buttonActions.replace('PLACEHOLDER_DATA_TITLE', title);
+
+                html += `${buttonActions}`
+
                 return html;
             }
         }

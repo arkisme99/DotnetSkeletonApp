@@ -15,6 +15,19 @@ namespace DotnetSkeletonApp.Services
     {
         protected readonly ApplicationDbContext _context = context;
 
+        public virtual async Task<Dictionary<string, object>> IndexData()
+        {
+            return await Task.FromResult(new Dictionary<string, object>());
+        }
+
+        public virtual async Task<Dictionary<string, object>> CreateData()
+        {
+            return await Task.FromResult(new Dictionary<string, object>());
+        }
+        public virtual async Task<Dictionary<string, object>> EditData(Guid Id)
+        {
+            return await Task.FromResult(new Dictionary<string, object>());
+        }
 
         protected virtual async Task<string?> ProcessUpload(IFormFile file, string subFolder)
         {

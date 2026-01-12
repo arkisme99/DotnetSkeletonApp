@@ -1,0 +1,11 @@
+@using DotnetSkeletonApp.Models.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@model TextareaViewModel
+
+<div class="form-group">
+    <label for="@Model.Name">@Model.Label</label>
+    <textarea name="@Model.Name" class="form-control @(Model.AddNewClass ?? "")" placeholder="@Model.PlaceHolder"
+        id="@Model.Id" @Html.Raw(Model.Attributes ?? "")>@Model.Value</textarea>
+    <div class="invalid-feedback">@Localizer["No, you missed this one"].</div>
+</div>

@@ -44,12 +44,21 @@ namespace DotnetSkeletonApp.Controllers
             return View();
         }
 
-        public virtual IActionResult Create()
+        public virtual async Task<IActionResult> Create()
         {
             // Di sini false, karena kita tambah level "Tambah" yang true
             var breadcrumbs = GetBaseBreadcrumbs();
             breadcrumbs.Add(new BreadcrumbsViewModel($"Tambah {ControllerName}", true, ControllerName, "Create"));
             SetBreadcrumbs([.. breadcrumbs]);
+
+            // AMBIL DATA DARI SERVICE
+            var extraData = await _service.CreateData();
+
+            // Pindahkan isi dictionary ke ViewData agar bisa diakses langsung di View
+            foreach (var item in extraData)
+            {
+                ViewData[item.Key] = item.Value;
+            }
 
             return View();
         }
