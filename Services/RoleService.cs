@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Data;
 using DotnetSkeletonApp.Models.UserModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotnetSkeletonApp.Services
 {
     public class RoleService(
         ApplicationDbContext _context,
         PermissionService permissionService
-    ) : BaseCrudService<ApplicationRole>(
+    ) : BaseCrudService<ApplicationRole, string>(
         _context
     )
     {
@@ -25,21 +26,31 @@ namespace DotnetSkeletonApp.Services
 
             return new Dictionary<string, object>
             {
+                { "Permissions", groupedPermissions }
+            };
+        }
+
+        public override async Task<Dictionary<string, object>> EditData(string Id)
+        {
+
+            var groupedPermissions = await _permissionService.GetPermissionsAsync();
+            var currentRolePermissions = await _permissionService.GetRoleWithPermissionsAsync(Id.ToString());
+
+            return new Dictionary<string, object>
+            {
                 { "Permissions", groupedPermissions },
-                // Anda bisa tambah data lain di sini, misal:
-                // { "Categories", categoriesList }
+                { "CurrentRolePermissions", currentRolePermissions }
             };
         }
 
         protected override async Task<ApplicationRole> AfterCreateAsync(ApplicationRole model, IFormCollection RawFormData)
         {
-            // Console.WriteLine("Masuk AfterCreateAsync");
-            // proses permission di sini
+
             var selectedPermissionNames = RawFormData!["choosePermissions[]"].ToList();
-            // Console.WriteLine("Masuk AfterCreateAsync selectedPermissionNames : -> " + selectedPermissionNames.Count);
+
             if (selectedPermissionNames != null && selectedPermissionNames.Count != 0)
             {
-                // Console.WriteLine("Selected Permissions: " + string.Join(", ", selectedPermissionNames));
+
                 var permissions = _context.Permissions
                     .Where(p => selectedPermissionNames.Contains(p.Name))
                     .ToList();
@@ -61,6 +72,50 @@ namespace DotnetSkeletonApp.Services
 
                 await _context.SaveChangesAsync();
             }
+
+            return model;
+        }
+
+        protected override async Task<ApplicationRole> AfterUpdateAsync(ApplicationRole model, IFormCollection RawFormData)
+        {
+            var selectedPermissionNames = RawFormData!["choosePermissions[]"].ToList();
+
+            // Ambil permission lama
+            var oldPermissionIds = await _context.RolePermissions
+                .Where(rp => rp.RoleId == model.Id)
+                .Select(rp => rp.PermissionId)
+                .ToListAsync();
+
+            // Ambil permissionId dari selectedPermissionNames
+            var newPermissionIds = await _context.Permissions
+                .Where(p => selectedPermissionNames.Contains(p.Name))
+                .Select(p => p.Id)
+                .ToListAsync();
+
+            // Hitung diff
+            var toAdd = newPermissionIds.Except(oldPermissionIds).ToList();
+            var toRemove = oldPermissionIds.Except(newPermissionIds).ToList();
+
+            // Remove yang tidak dipakai lagi
+            if (toRemove.Count > 0)
+            {
+                var removeEntities = _context.RolePermissions
+                    .Where(rp => rp.RoleId == model.Id && toRemove.Contains(rp.PermissionId));
+                _context.RolePermissions.RemoveRange(removeEntities);
+            }
+
+            // Tambahkan yang baru
+            if (toAdd.Count > 0)
+            {
+                var addEntities = toAdd.Select(pid => new ApplicationRolePermission
+                {
+                    RoleId = model.Id,
+                    PermissionId = pid
+                });
+                await _context.RolePermissions.AddRangeAsync(addEntities);
+            }
+
+            await _context.SaveChangesAsync();
 
             return model;
         }

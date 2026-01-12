@@ -15,10 +15,10 @@ namespace DotnetSkeletonApp.Controllers
 {
     [Authorize]
     public class RoleController(
-        ILogger<BaseCrudController<ApplicationRole, RoleService>> logger,
+        ILogger<BaseCrudController<ApplicationRole, RoleService, string>> logger,
         RoleService roleService,
         IStringLocalizer<SharedResource> _localizer
-    ) : BaseCrudController<ApplicationRole, RoleService>(
+    ) : BaseCrudController<ApplicationRole, RoleService, string>(
         logger,
         roleService,
         _localizer

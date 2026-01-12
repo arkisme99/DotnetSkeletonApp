@@ -14,7 +14,7 @@ namespace DotnetSkeletonApp.Services
         ApplicationDbContext _context,
         UserManager<ApplicationUser> userManager,
         ILogger<ApplicationUser> logger
-    ) : BaseCrudService<ApplicationUser>(
+    ) : BaseCrudService<ApplicationUser, Guid>(
         _context
     )
     {

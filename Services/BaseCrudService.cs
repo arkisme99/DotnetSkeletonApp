@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotnetSkeletonApp.Services
 {
-    public class BaseCrudService<TModel>(
+    public class BaseCrudService<TModel, TKey>(
         ApplicationDbContext context
     ) where TModel : class
     {
@@ -24,7 +24,7 @@ namespace DotnetSkeletonApp.Services
         {
             return await Task.FromResult(new Dictionary<string, object>());
         }
-        public virtual async Task<Dictionary<string, object>> EditData(Guid Id)
+        public virtual async Task<Dictionary<string, object>> EditData(TKey Id)
         {
             return await Task.FromResult(new Dictionary<string, object>());
         }
@@ -51,18 +51,28 @@ namespace DotnetSkeletonApp.Services
 
         }
 
-        public virtual async Task<TModel> GetByIdAsync(Guid id)
+        public virtual async Task<TModel> GetByIdAsync(TKey id)
         {
             var data = await _context.Set<TModel>().FindAsync(id);
             return data!;
         }
 
-        protected virtual async Task<TModel> BeforeCreateAsync(TModel model)
+        protected virtual async Task<TModel> BeforeCreateAsync(TModel model, IFormCollection RawFormData)
         {
             return model;
         }
 
         protected virtual async Task<TModel> AfterCreateAsync(TModel model, IFormCollection RawFormData)
+        {
+            return model;
+        }
+
+        protected virtual async Task<TModel> BeforeUpdateAsync(TModel model, IFormCollection RawFormData)
+        {
+            return model;
+        }
+
+        protected virtual async Task<TModel> AfterUpdateAsync(TModel model, IFormCollection RawFormData)
         {
             return model;
         }
@@ -73,7 +83,7 @@ namespace DotnetSkeletonApp.Services
 
             try
             {
-                tmodel = await BeforeCreateAsync(tmodel);
+                tmodel = await BeforeCreateAsync(tmodel, RawFormData);
 
                 _context.Set<TModel>().Add(tmodel);
                 await _context.SaveChangesAsync();
@@ -90,14 +100,18 @@ namespace DotnetSkeletonApp.Services
             }
         }
 
-        public virtual async Task<TModel> UpdateAsync(TModel tmodel)
+        public virtual async Task<TModel> UpdateAsync(TModel tmodel, IFormCollection RawFormData)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
+                tmodel = await BeforeUpdateAsync(tmodel, RawFormData);
+
                 _context.Set<TModel>().Update(tmodel);
                 await _context.SaveChangesAsync();
+
+                tmodel = await AfterUpdateAsync(tmodel, RawFormData);
 
                 await transaction.CommitAsync();
                 return tmodel;

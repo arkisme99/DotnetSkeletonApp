@@ -18,12 +18,12 @@ namespace DotnetSkeletonApp.Controllers
 {
     [Authorize]
     public class UserController(
-        ILogger<BaseCrudController<ApplicationUser, UserService>> _logger,
+        ILogger<BaseCrudController<ApplicationUser, UserService, Guid>> _logger,
         UserService userService,
         IStringLocalizer<SharedResource> localizer,
         SignInManager<ApplicationUser> signInManager,
         IHttpContextAccessor httpContextAccessor
-    ) : BaseCrudController<ApplicationUser, UserService>(
+    ) : BaseCrudController<ApplicationUser, UserService, Guid>(
         _logger,
         userService,
         localizer

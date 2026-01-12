@@ -11,18 +11,18 @@ using Microsoft.Extensions.Localization;
 
 namespace DotnetSkeletonApp.Controllers
 {
-    public abstract class BaseCrudController<TModel, TService>(
-        ILogger<BaseCrudController<TModel, TService>> logger,
+    public abstract class BaseCrudController<TModel, TService, TKey>(
+        ILogger<BaseCrudController<TModel, TService, TKey>> logger,
         TService service,
         IStringLocalizer<SharedResource> _localizer
     ) : BaseController
         where TModel : class
-        where TService : BaseCrudService<TModel>
+        where TService : BaseCrudService<TModel, TKey>
     {
         protected virtual string ModelName => typeof(TModel).Name;
         protected virtual string ControllerName => Request.RouteValues["controller"]?.ToString() ?? "";
         protected readonly TService _service = service;
-        protected readonly ILogger<BaseCrudController<TModel, TService>> _logger = logger;
+        protected readonly ILogger<BaseCrudController<TModel, TService, TKey>> _logger = logger;
         // protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
 
         public List<BreadcrumbsViewModel> GetBaseBreadcrumbs()
@@ -92,7 +92,7 @@ namespace DotnetSkeletonApp.Controllers
             }
         }
 
-        public virtual async Task<IActionResult> Edit(Guid Id)
+        public virtual async Task<IActionResult> Edit(TKey Id)
         {
             var breadcrumbs = GetBaseBreadcrumbs();
             breadcrumbs.Add(new BreadcrumbsViewModel($"Edit {ControllerName}", true, ControllerName, "Edit"));
@@ -100,21 +100,33 @@ namespace DotnetSkeletonApp.Controllers
 
             var DataModel = await _service.GetByIdAsync(Id);
             if (DataModel == null) return NotFound();
+
+            // AMBIL DATA DARI SERVICE
+            var extraData = await _service.EditData(Id);
+
+            // Pindahkan isi dictionary ke ViewData agar bisa diakses langsung di View
+            foreach (var item in extraData)
+            {
+                ViewData[item.Key] = item.Value;
+            }
+
             return View(DataModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> Edit(Guid id, TModel tmodel)
+        public virtual async Task<IActionResult> Edit(TKey id, TModel tmodel)
         {
-            // Menggunakan cast ke dynamic untuk "memaksa" akses ke properti Id, dari pada bikin Interface
-            var modelId = (Guid)((dynamic)tmodel).Id;
-
-            if (id != modelId) return NotFound();
+            var RawFormData = Request.Form;
+            var modelId = (TKey)((dynamic)tmodel).Id;
+            if (id == null || !id.Equals(modelId))
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
-                await _service.UpdateAsync(tmodel);
+                await _service.UpdateAsync(tmodel, RawFormData);
 
                 TempData["Notify.Type"] = "success";
                 TempData["Notify.Message"] = _localizer["PesanUbahSukses"].Value;

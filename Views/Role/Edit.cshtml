@@ -1,0 +1,64 @@
+﻿@using DotnetSkeletonApp.Models.UserModels
+@using DotnetSkeletonApp.Models.ViewModels
+@using Microsoft.AspNetCore.Html
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<SharedResource> Localizer
+@model ApplicationRole
+@{
+    Layout = "Crud/_CEdit";
+
+    ViewData["routeId"] = Model.Id;
+    
+    var Permissions = ViewData["Permissions"] as Dictionary<string, List<Permission>>;
+    var CurrentRolePermissions = ViewData["CurrentRolePermissions"] as List<Permission>;
+
+    var inputGroupRole = new InputGroupViewModel
+    {
+        Label = @Localizer["Role Name"],
+        Name = "Name",
+        Id = "Name",
+        PlaceHolder = @Localizer["Enter a Role Name"],
+        Attributes = $"value=\"{Model.Name}\" autofocus required maxlength=\"100\"",
+        Icon = "fal fa-user-tag"
+    };
+
+    var textareaDescription = new TextareaViewModel
+    {
+        Label = @Localizer["Description Role"],
+        Name = "Description",
+        Id = "Description",
+        Value = Model.Description,
+        PlaceHolder = @Localizer["Enter a Description Role"]
+    };
+}
+
+@await Html.PartialAsync("Components/_InputGroup", inputGroupRole)
+@await Html.PartialAsync("Components/_Textarea", textareaDescription)
+
+<div class="row">
+    @if (Permissions != null)
+    {
+        @foreach (var itemPermission in Permissions!)
+        {
+            var bodyPermissions = "";
+
+            foreach (var item in @itemPermission.Value)
+            {
+                bodyPermissions += $"<div class=\"col-md-12\"><div class=\"custom-control custom-checkbox\"><input    class=\"custom-control-input custom-control-input-danger\" type=\"checkbox\" name=\"choosePermissions[]\"    value=\"{item.Name}\" id=\"permission_item.{item.Id}\" {(CurrentRolePermissions!.Any(p => p.Name == item.Name) ? "checked" : "")}><label for=\"permission_item.{item.Id}\"    class=\"custom-control-label\">{item.Name}</label></div></div>";
+
+            }
+
+            var cardComponent = new CardComponentViewModel
+            {
+                Title = itemPermission.Key,
+                Body = new HtmlString($"<div class=\"row\">{bodyPermissions}</div>")
+            };
+
+            <div class="col-md-3">
+                @await Html.PartialAsync("Components/_CardComponent", cardComponent)
+            </div>
+        }
+    }
+
+</div>

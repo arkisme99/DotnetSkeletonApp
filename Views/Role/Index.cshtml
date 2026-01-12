@@ -61,7 +61,7 @@
                 let title = `${row.name}`;
                 let html = '';
 
-                let editUrl = "@ViewData["currentController"]/Edit/:id";
+                let editUrl = "/@ViewData["currentController"]/Edit/:id";
                 editUrl = editUrl.replace(':id', id);
 
                 let buttonActions = $("#tpl-button-actions").html();

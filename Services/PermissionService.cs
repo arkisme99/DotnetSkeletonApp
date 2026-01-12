@@ -19,9 +19,20 @@ namespace DotnetSkeletonApp.Services
 
             var grouped = permissions
                 .GroupBy(p => p.Name.Split('_').Last().Trim())
-                .ToDictionary(g => g.Key, g => g.ToList());
+                .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Name).ToList());
 
             return grouped;
+        }
+
+        public async Task<List<Permission>> GetRoleWithPermissionsAsync(string roleId)
+        {
+            var rolePermissions = await _context.RolePermissions
+                .Include(rp => rp.Permission)
+                .Where(rp => rp.RoleId == roleId)
+                .Select(rp => rp.Permission)
+                .ToListAsync();
+
+            return rolePermissions!;
         }
     }
 }
