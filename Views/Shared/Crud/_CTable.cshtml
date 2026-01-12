@@ -9,6 +9,11 @@
     var contentModalDelete = new HtmlString(@"<p>Anda yakin ingin hapus data ?</p><p id='content'></p> ");
     var idModalDelete = new ViewDataDictionary(ViewData) { { "ModalId", "modal-delete" }, { "FormId", "formHapus" } };
 
+    var contentModalMultiDelete = new HtmlString(@"<p>Anda yakin ingin hapus data yang terpilih ?</p><input type='hidden'
+name='datahapus' id='datahapus' value=''> ");
+    var idModalMultiDelete = new ViewDataDictionary(ViewData) { {"ModalId","modal-multidelete" }, { "FormId",
+"formHapusMulti" } };
+
 }
 
 <div class="table-responsive">
@@ -21,6 +26,7 @@
 <input type="hidden" name="orderColumn" id="orderColumn" value="@(ViewData["OrderColumn"] ?? 0)">
 
 @await Html.PartialAsync("Components/_ModalDelete", contentModalDelete, idModalDelete)
+@await Html.PartialAsync("Components/_ModalDelete", contentModalMultiDelete, idModalMultiDelete)
 
 @section TitleInfo {
     <i class="fal fa-table"></i>&nbsp;@Localizer["Data"] @ViewData["Title"]
@@ -156,6 +162,35 @@
                 $('.delete').prop('disabled', true);
             });
         })
+
+        $("#btn-delete-multi").on("click", function () {
+            let multiDeleteDataUrl = `/@ViewData["currentController"]/MultiDelete/`;
+
+            hapusmulti(multiDeleteDataUrl);
+        });
+
+        $("#formHapusMulti").submit(function (e) {
+            let tpl = $("#tpl-loading-icon").html();
+            $(".delete").html(tpl);
+            $(".delete").prop("disabled", true);
+        });
+
+        function hapusmulti(deleteUrl) {
+
+            var id = [];
+
+            $(":checkbox:checked").each(function (i) {
+                id[i] = $(this).val();
+            });
+
+            if (id.length === 0) {
+            } else {
+                $("#datahapus").val(id);
+
+                $("#formHapusMulti").attr("action", deleteUrl);
+                $("#modal-multidelete").modal("show");
+            }
+        }
     </script>
 
     @RenderSection("Scripts", required: false)

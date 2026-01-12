@@ -156,6 +156,37 @@ namespace DotnetSkeletonApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public virtual async Task<IActionResult> MultiDelete(string datahapus)
+        {
+            // Console.WriteLine("Di sinix : " + datahapus);
+            try
+            {
+
+                var deletedCount = await _service.DeleteMultisAsync(datahapus);
+
+                if (deletedCount > 0)
+                {
+                    TempData["Notify.Type"] = "success";
+                    TempData["Notify.Message"] = $"{deletedCount} Data {_localizer["PesanHapusSukses"].Value}";
+                }
+                else
+                {
+                    TempData["Notify.Type"] = "warning";
+                    TempData["Notify.Message"] = _localizer["PesanHapusBatal"].Value;
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = ex.Message;
+                // return BadRequest(ex.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
         protected virtual Dictionary<string, Expression<Func<TModel, object>>> GetColumnMap()
         {
             // Defaultnya kosong, anak tidak wajib override

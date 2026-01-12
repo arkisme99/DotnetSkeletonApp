@@ -36,6 +36,9 @@ namespace DotnetSkeletonApp.Controllers
         [HasPermission("Delete_Role")]
         public override async Task<IActionResult> Delete(string Id) => await base.Delete(Id);
 
+        [HasPermission("MultiDelete_Role")]
+        public override async Task<IActionResult> MultiDelete(string datahapus) => await base.MultiDelete(datahapus);
+
         protected override Dictionary<string, Expression<Func<ApplicationRole, object>>> GetColumnMap()
         {
             return new Dictionary<string, Expression<Func<ApplicationRole, object>>>

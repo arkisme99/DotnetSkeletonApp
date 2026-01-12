@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Data;
@@ -157,6 +158,56 @@ namespace DotnetSkeletonApp.Services
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<int> DeleteMultisAsync(string ids)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(ids))
+                    return 0;
+
+                var idList = ids.Split(',')
+                                .Select(id => id.Trim())
+                                .Where(id => !string.IsNullOrWhiteSpace(id))
+                                .ToList();
+
+                int deletedCount = 0;
+
+                foreach (var Id in idList)
+                {
+                    TKey convertedId = (TKey)TypeDescriptor.GetConverter(typeof(TKey)).ConvertFromInvariantString(Id)!;
+
+                    var tmodel = await GetByIdAsync(convertedId) ?? throw new Exception("Data not found");
+
+                    // Console.WriteLine("Di sini : " + tmodel.ToString());
+
+                    tmodel = await BeforeDeleteAsync(tmodel);
+
+                    _context.Set<TModel>().Remove(tmodel);
+
+                    await _context.SaveChangesAsync();
+
+                    tmodel = await AfterDeleteAsync(tmodel);
+
+                    deletedCount++;
+                }
+
+                if (deletedCount > 0)
+                    await _context.SaveChangesAsync();
+                // Commit transaction
+                await transaction.CommitAsync();
+
+                return deletedCount;
+
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+
         }
 
     }
