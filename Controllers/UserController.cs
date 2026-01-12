@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DotnetSkeletonApp.Helpers.Authorization;
 using DotnetSkeletonApp.Models;
 using DotnetSkeletonApp.Models.UserModels;
+using DotnetSkeletonApp.Models.ViewModels;
 using DotnetSkeletonApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -50,34 +51,60 @@ namespace DotnetSkeletonApp.Controllers
         [HasPermission("View_User")]
         public override IActionResult GetDataTable() => base.GetDataTable();
 
-        [HasPermission("Edit_User")]
-        public override async Task<IActionResult> Edit(Guid Id) => await base.Edit(Id);
 
         [HasPermission("Edit_User")]
+        public override async Task<IActionResult> Edit(Guid Id)
+        {
+            var breadcrumbs = GetBaseBreadcrumbs();
+            breadcrumbs.Add(new BreadcrumbsViewModel($"Edit {ControllerName}", true, ControllerName, "Edit"));
+            SetBreadcrumbs([.. breadcrumbs]);
+
+            var DataModel = await _service.GetByIdAsync(Id);
+            if (DataModel == null) return NotFound();
+
+            var viewModel = new UserViewModel
+            {
+                Id = Guid.Parse(DataModel.Id),
+                FullName = DataModel.FullName,
+                Email = DataModel.Email,
+                UserName = DataModel.UserName ?? DataModel.Email!,
+                PhoneNumber = DataModel.PhoneNumber,
+                ExistingPhotoPath = DataModel.Photo
+            };
+
+            return View(viewModel);
+        }
+
+        [HasPermission("Edit_User")]
+        // [ActionName("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public override async Task<IActionResult> Edit(Guid id, ApplicationUser user)
+        public async Task<IActionResult> EditUser(Guid id, UserViewModel user)
         {
-            if (id.ToString() != user.Id) return NotFound();
+            // if (id.ToString() != user.Id) return NotFound();
             try
             {
-                if (ModelState.IsValid)
+                /* if (ModelState.IsValid)
+                { */
+                // _logger.LogInformation($"Masuk Ke Editx : {user.FullName}");
+                await _service.UpdateUserAsync(id, user);
+
+                /* // Cek apakah user yang diedit adalah user yang sedang login
+                var currentUserId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (id.ToString() == currentUserId)
                 {
-                    _logger.LogInformation($"Masuk Ke Editx : {user.FullName}");
-                    await _service.UpdateAsync(user);
+                    // Ini akan memperbarui Cookie dengan data terbaru (termasuk Nama/Email)
+                    await _signInManager.RefreshSignInAsync(user);
+                } */
 
-                    /* // Cek apakah user yang diedit adalah user yang sedang login
-                    var currentUserId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if (id.ToString() == currentUserId)
-                    {
-                        // Ini akan memperbarui Cookie dengan data terbaru (termasuk Nama/Email)
-                        await _signInManager.RefreshSignInAsync(user);
-                    } */
-
-                    TempData["Notify.Type"] = "success";
-                    TempData["Notify.Message"] = _localizer["PesanUbahSukses"].Value;
-                    return RedirectToAction(nameof(Index));
-                }
+                TempData["Notify.Type"] = "success";
+                TempData["Notify.Message"] = _localizer["PesanUbahSukses"].Value;
+                return RedirectToAction(nameof(Index));
+                /*  }
+                 else
+                 {
+                     return RedirectToAction(nameof(Index));
+                 } */
 
             }
             catch (Exception ex)
@@ -85,8 +112,12 @@ namespace DotnetSkeletonApp.Controllers
                 TempData["Notify.Type"] = "error";
                 TempData["Notify.Message"] = ex.Message;
                 // return BadRequest(ex.Message);
+                // return View(user);
+                // return RedirectToAction(nameof(Edit), user);
+                return RedirectToAction(nameof(Index));
             }
-            return View(user);
+
+
         }
     }
 }

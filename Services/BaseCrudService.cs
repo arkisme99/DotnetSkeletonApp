@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Data;
+using DotnetSkeletonApp.Helpers;
 using DotnetSkeletonApp.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,19 @@ namespace DotnetSkeletonApp.Services
     ) where TModel : class
     {
         protected readonly ApplicationDbContext _context = context;
+
+
+        protected virtual async Task<string?> ProcessUpload(IFormFile file, string subFolder)
+        {
+            return await FileHelper.UploadFile(file, subFolder);
+        }
+
+        protected virtual string? ProcessDelete(string fileName, string subFolder)
+        {
+            return FileHelper.DeleteFile(fileName, subFolder);
+        }
+
+
         public virtual IQueryable<TModel> GetQueryAble()
         {
             return _context.Set<TModel>().AsQueryable();

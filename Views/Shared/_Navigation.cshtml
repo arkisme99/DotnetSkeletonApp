@@ -30,8 +30,8 @@
         </div>
         <div class="info-card pt-3" style="flex-direction: column !important">
             <div class="">
-                <img src="@ViewData["profileImage"]" class="profile-image rounded-circle " alt="@User.Identity?.Name"
-                    style="margin-top: 10px;">
+                <img src="@User.FindFirst("ProfilePhoto")?.Value" class="profile-image rounded-circle "
+                    alt="@User.Identity?.Name" style="margin-top: 10px;">
             </div>
             <div class="info-card-text " style="margin-top: 10px; align-items: center">
                 <a asp-controller="User" asp-action="Index" class="text-white">

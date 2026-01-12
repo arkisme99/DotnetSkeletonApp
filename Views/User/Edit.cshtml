@@ -1,10 +1,14 @@
-﻿@using DotnetSkeletonApp.Models.UserModels
-@using DotnetSkeletonApp.Models.ViewModels
+﻿@using DotnetSkeletonApp.Models.ViewModels
 @using Microsoft.Extensions.Localization
-@model ApplicationUser
+@model UserViewModel
 @inject IStringLocalizer<SharedResource> Localizer
 @{
     Layout = "Crud/_CEdit";
+
+    ViewData["actionForm"] = "EditUser";
+    ViewData["routeId"] = Model.Id;
+    ViewData["attributeForm"] = "multipart/form-data";
+
 
     var inputGroupEmail = new InputGroupViewModel
     {
@@ -36,8 +40,34 @@
         Attributes = $"value=\"{Model.PhoneNumber}\"",
         Icon = "fal fa-phone"
     };
+
+    var inputGroupPassword = new InputGroupViewModel
+    {
+        Label = @Localizer["Change Password"],
+        Type = "password",
+        Name = "Password",
+        Id = "Password",
+        PlaceHolder = @Localizer["Please fill in if you want to change the password"],
+        Attributes = "",
+        Icon = "show-password-toggle fal fa-eye",
+        DataTargetIcon = "#Password"
+    };
+
+    var inputImage = new InputImageViewModel
+    {
+        Label = @Localizer["Photo Profile"],
+        Name = "Photo",
+        Id = "Photo",
+        Attributes = "",
+    };
 }
 
 @await Html.PartialAsync("Components/_InputGroup", inputGroupEmail)
 @await Html.PartialAsync("Components/_InputGroup", inputGroupFullname)
 @await Html.PartialAsync("Components/_InputGroup", inputGroupPhoneNumber)
+@await Html.PartialAsync("Components/_InputImage", inputImage)
+@await Html.PartialAsync("Components/_InputGroup", inputGroupPassword)
+
+@section Scripts {
+    <script src="~/helpers/js/showpassword.js"></script>
+}

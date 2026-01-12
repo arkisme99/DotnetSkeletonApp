@@ -25,26 +25,13 @@ namespace DotnetSkeletonApp.Controllers
         protected readonly ILogger<BaseCrudController<TModel, TService>> _logger = logger;
         protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
 
-        private List<BreadcrumbsViewModel> GetBaseBreadcrumbs()
+        public List<BreadcrumbsViewModel> GetBaseBreadcrumbs()
         {
             return
             [
                 new ("Home", false, "Home", "Index"),
                 new (ControllerName, false, ControllerName, "Index")
             ];
-        }
-
-        // String konstan untuk folder (opsional)
-        protected const string UploadDir = "others";
-
-        protected async Task<string?> ProcessUpload(IFormFile file, string subFolder)
-        {
-            return await FileHelper.UploadFile(file, subFolder);
-        }
-
-        protected void ProcessDelete(string fileName, string subFolder)
-        {
-            FileHelper.DeleteFile(fileName, subFolder);
         }
 
         public virtual IActionResult Index()

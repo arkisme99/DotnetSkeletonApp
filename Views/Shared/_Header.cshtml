@@ -1,11 +1,11 @@
 @using System.Globalization
+@using System.Security.Claims
 <header class="page-header" role="banner">
     <!-- we need this logo when user switches to nav-function-top -->
     <div class="page-logo">
         <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
             data-toggle="modal" data-target="#modal-shortcut">
-            <img src="~/sources/img/favicon/fav.png" alt="@ViewData["Title"] - Dotnet Skeleton App"
-                aria-roledescription="logo">
+            <img src="@ViewData["logoPath"]" alt="@ViewData["Title"] - Dotnet Skeleton App" aria-roledescription="logo">
             <span class="page-logo-text mr-1">@ViewData["Title"] - Dotnet Skeleton App</span>
             <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
             <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
@@ -80,21 +80,22 @@
         @await Html.PartialAsync("Components/_Notifications")
         <!-- app user menu -->
         <div>
-            <a href="javascript:void(0);" data-toggle="dropdown" title="email@user.com"
+            <a href="javascript:void(0);" data-toggle="dropdown" title="@User.FindFirst(ClaimTypes.Email)?.Value"
                 class="header-icon d-flex align-items-center justify-content-center ml-2">
-                <img src="~/sources/img/demo/avatars/avatar-admin.png" class="profile-image rounded-circle"
-                    alt="Nama Lengkap">
+                <img src="@User.FindFirst("ProfilePhoto")?.Value" class="profile-image rounded-circle"
+                    alt="@User.Identity?.Name">
             </a>
             <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
                 <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
                     <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
                         <span class="mr-2">
-                            <img src="~/sources/img/demo/avatars/avatar-admin.png" class="rounded-circle profile-image"
-                                alt="Nama Lengkap">
+                            <img src="@User.FindFirst("ProfilePhoto")?.Value" class="rounded-circle profile-image"
+                                alt="@User.Identity?.Name">
                         </span>
                         <div class="info-card-text">
-                            <div class="fs-lg text-truncate text-truncate-lg">Nama Lengkap</div>
-                            <span class="text-truncate text-truncate-md opacity-80">email@user.com</span>
+                            <div class="fs-lg text-truncate text-truncate-lg">@User.Identity?.Name</div>
+                            <span
+                                class="text-truncate text-truncate-md opacity-80">@User.FindFirst(ClaimTypes.Email)?.Value</span>
                         </div>
                     </div>
                 </div>

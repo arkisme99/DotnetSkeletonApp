@@ -6,7 +6,8 @@
     Layout = "Crud/_CardLayout";
 }
 
-<form asp-controller="@ViewData["currentController"]" asp-action="Edit" method="post" id="formProccess">
+<form asp-controller="@ViewData["currentController"]" asp-action="@(ViewData["actionForm"] ?? "Edit")"
+    asp-route-id="@ViewData["routeId"]" method="post" enctype="@ViewData["attributeForm"]" id="formProccess">
     @RenderBody()
 
     @await Html.PartialAsync("Components/_SubmitSave")
@@ -21,11 +22,15 @@
 }
 
 @section Styles {
-
+    @* Salurkan section Styles dari Index ke _Layout *@
+    @RenderSection("Styles", required: false)
 }
 
 @section Scripts {
     <script src="~/helpers/js/form-handler.js"></script>
+
+    @* Salurkan section Scripts dari Index ke _Layout *@
+    @RenderSection("Scripts", required: false)
 
     <script>
         $(function () {

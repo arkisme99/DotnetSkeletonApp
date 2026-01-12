@@ -1,0 +1,15 @@
+@using DotnetSkeletonApp.Models.ViewModels
+@model InputImageViewModel
+
+<div class="form-group">
+    <label for="@Model.Id">@Model.Label</label>
+    <div class="input-group">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="@Model.Id" name="@Model.Id" accept="image/*"
+                @Html.Raw(Model.Attributes ?? "")>
+            <label class="custom-file-label" for="@Model.Id">Choose file</label>
+        </div>
+    </div>
+    <small>*only jpg, jpeg, png or gif file, max: 2 MB</small>
+    <div class="invalid-feedback">No, you missed this one.</div>
+</div>

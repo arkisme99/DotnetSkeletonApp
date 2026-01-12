@@ -30,14 +30,19 @@ namespace DotnetSkeletonApp.Helpers
             return fileName; // Simpan nama ini ke Database
         }
 
-        public static void DeleteFile(string fileName, string folderName)
+        public static string? DeleteFile(string fileName, string folderName)
         {
-            if (string.IsNullOrEmpty(fileName)) return;
+            if (string.IsNullOrEmpty(fileName)) return null;
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", folderName, fileName);
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
+                return "success";
+            }
+            else
+            {
+                return null;
             }
         }
     }

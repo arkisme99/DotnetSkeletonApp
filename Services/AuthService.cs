@@ -44,7 +44,8 @@ namespace DotnetSkeletonApp.Services
             {
                 new(ClaimTypes.NameIdentifier, user.Id),
                 new(ClaimTypes.Email, user.UserName ?? user.Email ?? email),
-                new(ClaimTypes.Name, user.FullName ?? "Nama Lengkap")
+                new(ClaimTypes.Name, user.FullName ?? "Nama Lengkap"),
+                new("ProfilePhoto", $"/uploads/avatar/{user.Photo}" ?? "/sources/img/demo/avatars/avatar-admin.png")
             };
 
             // role → claim

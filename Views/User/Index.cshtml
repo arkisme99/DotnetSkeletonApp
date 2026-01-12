@@ -44,7 +44,13 @@
             data: 'photo',
             width: '141px',
             render: function (data, type, row, meta) {
-                return `${row.photo}`;
+                let fullUrl = `/sources/img/demo/avatars/avatar-admin.png`;
+
+                if (row.photo != null) {
+                    fullUrl = `/uploads/avatar/${row.photo}`;
+                }
+
+                return `<img src="${fullUrl}" class="img-circle elevation-2" style="width: 40px; height: 40px;">`;
             }
         },
         {
