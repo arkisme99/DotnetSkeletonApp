@@ -62,12 +62,12 @@ namespace DotnetSkeletonApp.Services
             return model;
         }
 
-        protected virtual async Task<TModel> AfterCreateAsync(TModel model)
+        protected virtual async Task<TModel> AfterCreateAsync(TModel model, IFormCollection RawFormData)
         {
             return model;
         }
 
-        public virtual async Task<TModel> CreateAsync(TModel tmodel)
+        public virtual async Task<TModel> CreateAsync(TModel tmodel, IFormCollection RawFormData)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -78,7 +78,7 @@ namespace DotnetSkeletonApp.Services
                 _context.Set<TModel>().Add(tmodel);
                 await _context.SaveChangesAsync();
 
-                tmodel = await AfterCreateAsync(tmodel);
+                tmodel = await AfterCreateAsync(tmodel, RawFormData);
 
                 await transaction.CommitAsync();
                 return tmodel;

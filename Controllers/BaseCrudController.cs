@@ -67,13 +67,14 @@ namespace DotnetSkeletonApp.Controllers
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> Create(TModel tmodel)
         {
+            var RawFormData = Request.Form;
             try
             {
                 if (ModelState.IsValid)
                 {
                     // var choosePermissions = Request.Form["choosePermissions[]"].ToList();
                     // Console.WriteLine("Choose Permissions: " + string.Join(", ", choosePermissions));
-                    await _service.CreateAsync(tmodel);
+                    await _service.CreateAsync(tmodel, RawFormData);
                     TempData["Notify.Type"] = "success";
                     TempData["Notify.Message"] = _localizer["PesanTambahSukses"].Value;
                     return RedirectToAction(nameof(Index));

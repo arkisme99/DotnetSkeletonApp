@@ -16,6 +16,8 @@ namespace DotnetSkeletonApp.Services
     {
         public readonly PermissionService _permissionService = permissionService;
 
+        protected IFormCollection? RawFormData { get; private set; }
+
         public override async Task<Dictionary<string, object>> CreateData()
         {
 
@@ -29,10 +31,38 @@ namespace DotnetSkeletonApp.Services
             };
         }
 
-        /* protected override async Task<ApplicationRole> AfterCreateAsync(ApplicationRole model)
+        protected override async Task<ApplicationRole> AfterCreateAsync(ApplicationRole model, IFormCollection RawFormData)
         {
+            // Console.WriteLine("Masuk AfterCreateAsync");
             // proses permission di sini
+            var selectedPermissionNames = RawFormData!["choosePermissions[]"].ToList();
+            // Console.WriteLine("Masuk AfterCreateAsync selectedPermissionNames : -> " + selectedPermissionNames.Count);
+            if (selectedPermissionNames != null && selectedPermissionNames.Count != 0)
+            {
+                // Console.WriteLine("Selected Permissions: " + string.Join(", ", selectedPermissionNames));
+                var permissions = _context.Permissions
+                    .Where(p => selectedPermissionNames.Contains(p.Name))
+                    .ToList();
+
+                foreach (var perm in permissions)
+                {
+                    bool alreadyAssigned = _context.RolePermissions
+                        .Any(rp => rp.RoleId == model.Id && rp.PermissionId == perm.Id);
+
+                    if (!alreadyAssigned)
+                    {
+                        _context.RolePermissions.Add(new ApplicationRolePermission
+                        {
+                            RoleId = model.Id,
+                            PermissionId = perm.Id
+                        });
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
             return model;
-        } */
+        }
     }
 }
