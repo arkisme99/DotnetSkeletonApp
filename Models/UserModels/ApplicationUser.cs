@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using DotnetSkeletonApp.Models.Interface;
 using Microsoft.AspNetCore.Identity;
 
 namespace DotnetSkeletonApp.Models.UserModels
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IAuditableEntity
     {
         public string? FullName { get; set; }
         public string? Photo { get; set; }

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using DotnetSkeletonApp.Models.Interface;
 using Microsoft.AspNetCore.Identity;
 
 namespace DotnetSkeletonApp.Models.UserModels
 {
-    public class ApplicationRole : IdentityRole
+    public class ApplicationRole : IdentityRole, IAuditableEntity
     {
         public string? Description { get; set; }
         [Column("created_at", TypeName = "timestamp")]

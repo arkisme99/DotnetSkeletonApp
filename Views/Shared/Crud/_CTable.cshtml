@@ -72,11 +72,10 @@
 
                     const title = $(this).text();
                     const keywords = [
-                        '{{ strtolower(__("Created At")) }}',
-                        '{{ strtolower(__("Updated At")) }}',
-                        '{{ strtolower(__("Ueleted At")) }}',
-                        '{{ strtolower(__("Uxpired At")) }}',
-                        '{{ strtolower(__("Date")) }}'
+                        '@Localizer["Created At"].ToString()',
+                        '@Localizer["Updated At"].ToString()',
+                        '@Localizer["Deteled At"].ToString()',
+                        '@Localizer["Date"].ToString()'
                     ].map(k => k.toLowerCase());
 
                     if (keywords.some(key => title.toLowerCase().includes(key))) {

@@ -18,6 +18,7 @@
 </tbody>
 
 @section Scripts {
+    <script src="~/helpers/js/format-date.js"></script>
     <script>
         let columns = [{
             data: 'id',
@@ -47,7 +48,7 @@
             data: 'updatedAt',
             width: '141px',
             render: function (data, type, row, meta) {
-                return `${row.updatedAt}`;
+                return `${formatDateTimeYMDHIS(row.updatedAt)}`;
             }
         },
         {

@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Models;
+using DotnetSkeletonApp.Models.Interface;
 using DotnetSkeletonApp.Models.UserModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,7 @@ namespace DotnetSkeletonApp.Data
 
             var entries = ChangeTracker
                 .Entries()
-                .Where(e => e.Entity is AuditableEntity &&
+                .Where(e => (e.Entity is AuditableEntity || e.Entity is IAuditableEntity) &&
                             (e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted))
                 .ToList();
 
