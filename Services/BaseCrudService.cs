@@ -57,6 +57,39 @@ namespace DotnetSkeletonApp.Services
             return data!;
         }
 
+        protected virtual async Task<TModel> BeforeCreateAsync(TModel model)
+        {
+            return model;
+        }
+
+        protected virtual async Task<TModel> AfterCreateAsync(TModel model)
+        {
+            return model;
+        }
+
+        public virtual async Task<TModel> CreateAsync(TModel tmodel)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                tmodel = await BeforeCreateAsync(tmodel);
+
+                _context.Set<TModel>().Add(tmodel);
+                await _context.SaveChangesAsync();
+
+                tmodel = await AfterCreateAsync(tmodel);
+
+                await transaction.CommitAsync();
+                return tmodel;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
         public virtual async Task<TModel> UpdateAsync(TModel tmodel)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();

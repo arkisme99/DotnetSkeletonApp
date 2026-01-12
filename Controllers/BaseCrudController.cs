@@ -14,7 +14,7 @@ namespace DotnetSkeletonApp.Controllers
     public abstract class BaseCrudController<TModel, TService>(
         ILogger<BaseCrudController<TModel, TService>> logger,
         TService service,
-        IStringLocalizer<SharedResource> localizer
+        IStringLocalizer<SharedResource> _localizer
     ) : BaseController
         where TModel : class
         where TService : BaseCrudService<TModel>
@@ -23,7 +23,7 @@ namespace DotnetSkeletonApp.Controllers
         protected virtual string ControllerName => Request.RouteValues["controller"]?.ToString() ?? "";
         protected readonly TService _service = service;
         protected readonly ILogger<BaseCrudController<TModel, TService>> _logger = logger;
-        protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
+        // protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
 
         public List<BreadcrumbsViewModel> GetBaseBreadcrumbs()
         {
@@ -61,6 +61,34 @@ namespace DotnetSkeletonApp.Controllers
             }
 
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> Create(TModel tmodel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // var choosePermissions = Request.Form["choosePermissions[]"].ToList();
+                    // Console.WriteLine("Choose Permissions: " + string.Join(", ", choosePermissions));
+                    await _service.CreateAsync(tmodel);
+                    TempData["Notify.Type"] = "success";
+                    TempData["Notify.Message"] = _localizer["PesanTambahSukses"].Value;
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(tmodel);
+            }
+            catch (Exception ex)
+            {
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = ex.Message;
+                // return BadRequest(ex.Message);
+                // return View(user);
+                // return RedirectToAction(nameof(Edit), user);
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public virtual async Task<IActionResult> Edit(Guid Id)

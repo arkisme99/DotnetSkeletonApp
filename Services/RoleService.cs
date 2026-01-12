@@ -28,5 +28,11 @@ namespace DotnetSkeletonApp.Services
                 // { "Categories", categoriesList }
             };
         }
+
+        /* protected override async Task<ApplicationRole> AfterCreateAsync(ApplicationRole model)
+        {
+            // proses permission di sini
+            return model;
+        } */
     }
 }

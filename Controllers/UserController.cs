@@ -20,17 +20,19 @@ namespace DotnetSkeletonApp.Controllers
     public class UserController(
         ILogger<BaseCrudController<ApplicationUser, UserService>> _logger,
         UserService userService,
-        IStringLocalizer<SharedResource> _localizer,
+        IStringLocalizer<SharedResource> localizer,
         SignInManager<ApplicationUser> signInManager,
         IHttpContextAccessor httpContextAccessor
     ) : BaseCrudController<ApplicationUser, UserService>(
         _logger,
         userService,
-        _localizer
+        localizer
         )
     {
         public readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         public readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+
+        protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
 
         [HasPermission("View_User")]
         public override IActionResult Index() => base.Index();
