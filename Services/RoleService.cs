@@ -44,6 +44,14 @@ namespace DotnetSkeletonApp.Services
             };
         }
 
+        protected override async Task<ApplicationRole> BeforeCreateAsync(ApplicationRole model, RoleViewModel tviewmodel)
+        {
+            model.NormalizedName = model.Name!.ToUpperInvariant();
+            // Console.WriteLine($"Masuk Role {model.Name}, NormalizedName {model.NormalizedName}");
+            return model;
+
+        }
+
         // protected override async Task<RoleViewModel> AfterCreateAsync(RoleViewModel model, IFormCollection RawFormData)
         protected override async Task<ApplicationRole> AfterCreateAsync(ApplicationRole model, RoleViewModel tviewmodel)
         {
@@ -78,6 +86,14 @@ namespace DotnetSkeletonApp.Services
             }
 
             return model;
+        }
+
+        protected override async Task<ApplicationRole> BeforeUpdateAsync(ApplicationRole model, RoleViewModel tviewmodel)
+        {
+            model.NormalizedName = model.Name!.ToUpperInvariant();
+            // Console.WriteLine($"Masuk Role {model.Name}, NormalizedName {model.NormalizedName}");
+            return model;
+
         }
 
         protected override async Task<ApplicationRole> AfterUpdateAsync(ApplicationRole model, RoleViewModel tviewmodel)

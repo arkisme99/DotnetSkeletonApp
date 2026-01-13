@@ -19,53 +19,18 @@ namespace DotnetSkeletonApp.Controllers
 {
     [Authorize]
     public class UserController(
-        UserService userService,
-        SignInManager<ApplicationUser> signInManager,
-        IHttpContextAccessor httpContextAccessor
-    ) : BaseCrudController<ApplicationUser, UserService, Guid, UserViewModel>(
+        UserService userService
+    ) : BaseCrudController<ApplicationUser, UserService, string, UserViewModel>(
         userService
         )
     {
-        public readonly SignInManager<ApplicationUser> _signInManager = signInManager;
-        public readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+
 
         [HasPermission("View_User")]
         public override IActionResult Index() => base.Index();
         [HasPermission("Create_User")]
         public override async Task<IActionResult> Create() => await base.Create();
 
-        [HasPermission("Create_User")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser(UserViewModel user)
-        {
-            /* var validationResult = await _validator.ValidateAsync(user, options => options.IncludeRuleSets("Create", "default"));
-            if (!validationResult.IsValid)
-            {
-                var errors = validationResult.Errors.Select(x => x.ErrorMessage);
-
-                TempData["Notify.Type"] = "error";
-                TempData["Notify.Message"] = string.Join(", ", errors);
-                return View("Create");
-            } */
-
-            try
-            {
-
-                await _service.CreateUserAsync(user);
-
-                TempData["Notify.Type"] = "success";
-                // TempData["Notify.Message"] = _localizer["PesanTambahSukses"].Value;
-                return RedirectToAction(nameof(Index));
-
-            }
-            catch (Exception ex)
-            {
-                TempData["Notify.Type"] = "error";
-                TempData["Notify.Message"] = ex.Message;
-                return RedirectToAction(nameof(Index));
-            }
-        }
         protected override Dictionary<string, Expression<Func<ApplicationUser, object>>> GetColumnMap()
         {
             return new Dictionary<string, Expression<Func<ApplicationUser, object>>>
@@ -83,7 +48,7 @@ namespace DotnetSkeletonApp.Controllers
 
 
         [HasPermission("Edit_User")]
-        public override async Task<IActionResult> Edit(Guid Id)
+        public override async Task<IActionResult> Edit(string Id)
         {
             var breadcrumbs = GetBaseBreadcrumbs();
             breadcrumbs.Add(new BreadcrumbsViewModel($"Edit {ControllerName}", true, ControllerName, "Edit"));
@@ -91,6 +56,8 @@ namespace DotnetSkeletonApp.Controllers
 
             var DataModel = await _service.GetByIdAsync(Id);
             if (DataModel == null) return NotFound();
+
+            var userRoles = await _service.GetRoleByidUserAsync(Id);
 
             var viewModel = new UserViewModel
             {
@@ -100,52 +67,29 @@ namespace DotnetSkeletonApp.Controllers
                 Email = DataModel.Email!,
                 UserName = DataModel.UserName ?? DataModel.Email!,
                 PhoneNumber = DataModel.PhoneNumber,
-                ExistingPhotoPath = DataModel.Photo
+                Photo = DataModel.Photo,
+                DataRoles = userRoles
             };
 
             return View(viewModel);
         }
 
-        [HasPermission("Edit_User")]
+        /* [HasPermission("Edit_User")]
         // [ActionName("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(Guid id, UserViewModel user)
         {
-            /* var validationResult = await _validator.ValidateAsync(user, options => options.IncludeRuleSets("Update", "default"));
-            if (!validationResult.IsValid)
-            {
-                var errors = validationResult.Errors.Select(x => x.ErrorMessage);
-
-                TempData["Notify.Type"] = "error";
-                TempData["Notify.Message"] = string.Join(", ", errors);
-                return View("Edit", user);
-            } */
+            
 
             try
             {
-
-                /* if (ModelState.IsValid)
-                { */
                 // _logger.LogInformation($"Masuk Ke Editx : {user.FullName}");
                 await _service.UpdateUserAsync(id, user);
-
-                /* // Cek apakah user yang diedit adalah user yang sedang login
-                var currentUserId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (id.ToString() == currentUserId)
-                {
-                    // Ini akan memperbarui Cookie dengan data terbaru (termasuk Nama/Email)
-                    await _signInManager.RefreshSignInAsync(user);
-                } */
 
                 TempData["Notify.Type"] = "success";
                 // TempData["Notify.Message"] = _localizer["PesanUbahSukses"].Value;
                 return RedirectToAction(nameof(Index));
-                /*  }
-                 else
-                 {
-                     return RedirectToAction(nameof(Index));
-                 } */
 
             }
             catch (Exception ex)
@@ -159,6 +103,6 @@ namespace DotnetSkeletonApp.Controllers
             }
 
 
-        }
+        } */
     }
 }

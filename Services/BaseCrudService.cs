@@ -102,6 +102,8 @@ namespace DotnetSkeletonApp.Services
             {
                 tmodel = await BeforeCreateAsync(tmodel, tviewmodel);
 
+                // Console.WriteLine($"Check Data {tmodel.ToString()}");
+
                 _context.Set<TModel>().Add(tmodel);
                 await _context.SaveChangesAsync();
 

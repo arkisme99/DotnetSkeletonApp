@@ -60,14 +60,50 @@
         Id = "Photo",
         Attributes = "",
     };
+
+    var selectRoles = new SelectInputViewModel
+    {
+        Label = @Localizer["Choose Roles"],
+        Name = "DataRoles[]",
+        Attributes = "required multiple",
+        Id = "DataRoles"
+    };
 }
 
 @await Html.PartialAsync("Components/_InputGroup", inputGroupEmail)
 @await Html.PartialAsync("Components/_InputGroup", inputGroupFullname)
 @await Html.PartialAsync("Components/_InputGroup", inputGroupPhoneNumber)
 @await Html.PartialAsync("Components/_InputImage", inputImage)
+@await Html.PartialAsync("Components/_SelectInput", selectRoles)
 @await Html.PartialAsync("Components/_InputGroup", inputGroupPassword)
+
+@section Styles {
+    <link rel="stylesheet" href="~/sources/css/formplugins/select2/select2.bundle.css">
+}
 
 @section Scripts {
     <script src="~/helpers/js/showpassword.js"></script>
+    <script src="~/sources/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/helpers/js/select2-ajax.js"></script>
+    <script>
+        $(function () {
+            handleSelect({
+                idSelect: '#DataRoles',
+                url: "/Role/GetSelect",
+                placeholder: "Choose Roles",
+            });
+
+            @* $("#DataRoles").val('712d5a7c-46b9-4da8-b2d6-6dafc15b9128').trigger('change') *@
+
+                // 1. Definisikan ID dan Nama yang ingin ditampilkan (biasanya dari database)
+                var idTerpilih = '712d5a7c-46b9-4da8-b2d6-6dafc15b9128';
+            var namaTerpilih = 'Admin'; // Ganti dengan nama role yang sesuai
+
+            // 2. Buat elemen option secara manual (params: text, id, defaultSelected, selected)
+            var newOption = new Option(namaTerpilih, idTerpilih, true, true);
+
+            // 3. Masukkan ke select2 dan trigger perubahan
+            $('#DataRoles').append(newOption).trigger('change');
+        });
+    </script>
 }

@@ -6,7 +6,7 @@
 @{
     Layout = "Crud/_CCreate";
 
-    ViewData["actionForm"] = "CreateUser";
+    @* ViewData["actionForm"] = "CreateUser"; *@
     ViewData["attributeForm"] = "multipart/form-data";
 
     var inputGroupEmail = new InputGroupViewModel
@@ -62,7 +62,7 @@
 
     var selectRoles = new SelectInputViewModel
     {
-        Label = @Localizer["Photo Profile"],
+        Label = @Localizer["Choose Roles"],
         Name = "DataRoles[]",
         Attributes = "required multiple",
         Id = "DataRoles"

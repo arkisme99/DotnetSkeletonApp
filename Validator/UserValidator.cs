@@ -14,8 +14,15 @@ namespace DotnetSkeletonApp.Validator
 
             RuleFor(x => x.UserName)
                 .NotEmpty();
+            RuleFor(x => x.FullName)
+                .NotEmpty();
             RuleFor(x => x.PhotoForm)
                 .IsValidImage();
+
+            RuleFor(x => x.DataRoles)
+            .NotNull().WithMessage("Silakan pilih minimal satu roles.")
+            .NotEmpty().WithMessage("Silakan pilih minimal satu roles.")
+            .Must(x => x != null && x.Length > 0).WithMessage("Minimal satu data harus dipilih.");
 
             RuleSet("Create", () =>
             {
