@@ -11,6 +11,7 @@ using DotnetSkeletonApp.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace DotnetSkeletonApp.Controllers
@@ -22,6 +23,7 @@ namespace DotnetSkeletonApp.Controllers
         roleService
         )
     {
+        public readonly RoleService roleService = roleService;
         [HasPermission("View_Role")]
         public override IActionResult Index() => base.Index();
 
@@ -51,6 +53,32 @@ namespace DotnetSkeletonApp.Controllers
         }
         [HasPermission("View_Role")]
         public override IActionResult GetDataTable() => base.GetDataTable();
+        [HasPermission("View_Role")]
+        public async Task<IActionResult> GetSelect(string? q)
+        {
+            var query = roleService.GetQueryAble();
+
+            if (!string.IsNullOrEmpty(q))
+            {
+                // Filter seperti Select2 "search"
+                query = query.Where(r => r.Name!.Contains(q)).Take(5);
+            }
+            else
+            {
+                // Default ambil 5 data pertama
+                query = query.Take(5);
+            }
+
+            var roles = await query
+                .Select(r => new SelectTwoViewModel
+                {
+                    Id = r.Id,         // biasanya string (GUID) kalau pakai IdentityRole
+                    Text = r.Name!
+                })
+                .ToListAsync();
+
+            return Ok(roles);
+        }
 
     }
 }

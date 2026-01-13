@@ -46,8 +46,8 @@ namespace DotnetSkeletonApp.Services
         public virtual IQueryable<TModel> GetQueryAble()
         {
             var query = _context.Set<TModel>().AsQueryable();
-            var sql = query.ToQueryString();
-            Console.WriteLine("Cek SQL : " + sql);
+            // var sql = query.ToQueryString();
+            // Console.WriteLine("Cek SQL : " + sql);
             return query;
         }
 

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DotnetSkeletonApp.Models.UserModels
 {
+    /* [AttributeUsage(AttributeTargets.Property)]
+    public class SearchableAttribute : Attribute { } */
     public class ApplicationRole : IdentityRole, IAuditableEntity
     {
         public string? Description { get; set; }
@@ -22,7 +24,8 @@ namespace DotnetSkeletonApp.Models.UserModels
         public bool IsDeleted { get; set; } = false;
         [Column("deleted_at", TypeName = "timestamp")]
         public DateTime? DeletedAt { get; set; }
-        public ICollection<ApplicationRolePermission>? RolePermissions { get; set; }
-        public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; } = [];
+        // public ICollection<ApplicationRolePermission>? RolePermissions { get; set; }
+        // public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; } = [];
+
     }
 }

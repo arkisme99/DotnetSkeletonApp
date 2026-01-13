@@ -1,0 +1,14 @@
+@using DotnetSkeletonApp.Models.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@model SelectInputViewModel
+
+<div class="form-group">
+    @if (Model.Label != null)
+    {
+        <label for="@Model.Id">@Model.Label</label>
+    }
+    <select name="@Model.Name" id="@Model.Id" class="select2 form-control @(Model.AddNewClass ?? "")"
+        style="width: 100%;" @Html.Raw(Model.Attributes ?? "")></select>
+    <div asp-validation-for="@Model.Name" class="invalid-feedback">@Localizer["No, you missed this one"].</div>
+</div>

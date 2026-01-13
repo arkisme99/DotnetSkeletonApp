@@ -59,14 +59,38 @@
         Id = "Photo",
         Attributes = "",
     };
+
+    var selectRoles = new SelectInputViewModel
+    {
+        Label = @Localizer["Photo Profile"],
+        Name = "DataRoles[]",
+        Attributes = "required multiple",
+        Id = "DataRoles"
+    };
 }
 
 @await Html.PartialAsync("Components/_InputGroup", inputGroupEmail)
 @await Html.PartialAsync("Components/_InputGroup", inputGroupFullname)
 @await Html.PartialAsync("Components/_InputGroup", inputGroupPhoneNumber)
 @await Html.PartialAsync("Components/_InputImage", inputImage)
+@await Html.PartialAsync("Components/_SelectInput", selectRoles)
 @await Html.PartialAsync("Components/_InputGroup", inputGroupPassword)
+
+@section Styles {
+    <link rel="stylesheet" href="~/sources/css/formplugins/select2/select2.bundle.css">
+}
 
 @section Scripts {
     <script src="~/helpers/js/showpassword.js"></script>
+    <script src="~/sources/js/formplugins/select2/select2.bundle.js"></script>
+    <script src="~/helpers/js/select2-ajax.js"></script>
+    <script>
+        $(function () {
+            handleSelect({
+                idSelect: '#DataRoles',
+                url: "/Role/GetSelect",
+                placeholder: "Choose Roles",
+            });
+        });
+    </script>
 }
