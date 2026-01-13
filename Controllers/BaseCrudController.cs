@@ -82,7 +82,8 @@ namespace DotnetSkeletonApp.Controllers
 
                 TempData["Notify.Type"] = "error";
                 TempData["Notify.Message"] = string.Join(", ", errors);
-                return View("Create");
+                // return View("Create");
+                return RedirectToAction(nameof(Create));
             }
 
             // var RawFormData = Request.Form;
@@ -139,7 +140,7 @@ namespace DotnetSkeletonApp.Controllers
 
                 TempData["Notify.Type"] = "error";
                 TempData["Notify.Message"] = string.Join(", ", errors);
-                return View("Create");
+                return RedirectToAction(nameof(Edit), id);
             }
 
             // var RawFormData = Request.Form;

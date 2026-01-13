@@ -19,20 +19,34 @@ namespace DotnetSkeletonApp.Services
     {
         public readonly UserManager<ApplicationUser> _userManager = userManager;
 
-        public override IQueryable<UserViewModel> GetQueryAble()
-        {
-            // Ini seperti User::with('roles')->get() di Laravel
-            return _context.Set<UserViewModel>()
-                           .Include(u => u.UserRoles)
-                           //   .ThenInclude(ur => ur.Role)
-                           .AsQueryable();
-        }
-
         //Ternyata identityUser pakainya string, bukan Guid
         public override async Task<ApplicationUser> GetByIdAsync(Guid id)
         {
             var data = await _context.Set<ApplicationUser>().FindAsync(id.ToString());
             return data!;
+        }
+
+        public override IQueryable<ApplicationUser> GetQueryAble()
+        {
+            // Jangan hanya return _context.Set<TModel>()
+            var quero = _context.ApplicationUsers
+                .Select(u => new ApplicationUser
+                {
+                    Id = u.Id,
+                    FullName = u.FullName!,
+                    UserName = u.UserName!,
+                    Email = u.Email!,
+                    // Builder Anda akan memicu SQL JOIN di sini:
+                    RoleNames = (from ur in _context.UserRoles
+                                 join r in _context.Roles on ur.RoleId equals r.Id
+                                 where ur.UserId == u.Id
+                                 select r.Name).ToList()
+                });
+
+            var sql = quero.ToQueryString();
+            Console.WriteLine("Cek SQL 2: " + sql);
+
+            return quero;
         }
 
         public async Task<ApplicationUser> UpdateUserAsync(Guid id, ApplicationUser applicationUser)

@@ -80,9 +80,9 @@ namespace DotnetSkeletonApp.Services
             return model;
         }
 
-        protected override async Task<ApplicationRole> AfterUpdateAsync(ApplicationRole model, RoleViewModel Tviewmodel)
+        protected override async Task<ApplicationRole> AfterUpdateAsync(ApplicationRole model, RoleViewModel tviewmodel)
         {
-            /* var selectedPermissionNames = RawFormData!["choosePermissions[]"].ToList();
+            var selectedPermissionNames = tviewmodel.ChoosePermissions;
 
             // Ambil permission lama
             var oldPermissionIds = await _context.RolePermissions
@@ -119,7 +119,7 @@ namespace DotnetSkeletonApp.Services
                 await _context.RolePermissions.AddRangeAsync(addEntities);
             }
 
-            await _context.SaveChangesAsync(); */
+            await _context.SaveChangesAsync();
 
             return model;
         }

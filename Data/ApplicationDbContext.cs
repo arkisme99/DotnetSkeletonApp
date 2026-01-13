@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DotnetSkeletonApp.Models;
 using DotnetSkeletonApp.Models.Interface;
 using DotnetSkeletonApp.Models.UserModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -115,13 +116,22 @@ namespace DotnetSkeletonApp.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<ApplicationUser>(user =>
+            /* builder.Entity<ApplicationUser>(user =>
             {
                 user.HasMany(e => e.UserRoles)
                     .WithOne()
                     .HasForeignKey(ur => ur.UserId)
                     .IsRequired();
             });
+
+            builder.Entity<IdentityUserRole<string>>(userRole =>
+                {
+                    userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+                    userRole.HasOne<ApplicationRole>() // Map ke class Role Anda
+                        .WithMany()
+                        .HasForeignKey(ur => ur.RoleId);
+                }); */
 
             builder.Entity<ApplicationRolePermission>()
                 .HasKey(rp => new { rp.RoleId, rp.PermissionId });

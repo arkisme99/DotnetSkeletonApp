@@ -23,5 +23,6 @@ namespace DotnetSkeletonApp.Models.UserModels
         [Column("deleted_at", TypeName = "timestamp")]
         public DateTime? DeletedAt { get; set; }
         public ICollection<ApplicationRolePermission>? RolePermissions { get; set; }
+        public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; } = [];
     }
 }

@@ -20,6 +20,8 @@ namespace DotnetSkeletonApp.Models.UserModels
         public bool IsDeleted { get; set; }
         public DateTime? DeletedAt { get; set; }
 
-        public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; } = [];
+        // public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; } = [];
+        [NotMapped]
+        public List<string> RoleNames { get; set; } = [];
     }
 }

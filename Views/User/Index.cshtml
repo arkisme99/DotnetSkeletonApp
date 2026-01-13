@@ -7,9 +7,9 @@
 
 <thead>
     <tr>
-        <th width="5%">Id</th>
         <th width="15%">Full Name</th>
         <th width="15%">Username</th>
+        <th width="15%">Role</th>
         <th width="15%">Photo</th>
         <th width="10%">Actions</th>
     </tr>
@@ -19,63 +19,65 @@
 
 @section Scripts {
     <script>
-        let columns = [{
-            data: 'id',
-            searchable: false,
-            width: '51px',
-            render: function (data, type, row, meta) {
-                return row.id;
-            }
-        },
-        {
-            data: 'fullName',
-            width: '141px',
-            render: function (data, type, row, meta) {
-                return `${row.fullName}`;
-            }
-        },
-        {
-            data: 'userName',
-            width: '141px',
-            render: function (data, type, row, meta) {
-                return `${row.userName}`;
-            }
-        },
-        {
-            data: 'photo',
-            width: '141px',
-            render: function (data, type, row, meta) {
-                let fullUrl = `/sources/img/demo/avatars/avatar-admin.png`;
-
-                if (row.photo != null) {
-                    fullUrl = `/uploads/avatar/${row.photo}`;
+        let columns = [
+            {
+                data: 'fullName',
+                width: '141px',
+                render: function (data, type, row, meta) {
+                    return `${row.fullName}`;
                 }
+            },
+            {
+                data: 'userName',
+                width: '141px',
+                render: function (data, type, row, meta) {
+                    return `${row.userName}`;
+                }
+            },
+            {
+                data: 'roleNames',
+                orderable: false,
+                searchable: false,
+                width: '141px',
+                render: function (data, type, row, meta) {
+                    return row.roleNames.map(r => `<span class="badge bg-success">${r}</span>`).join(' ');
+                }
+            },
+            {
+                data: 'photo',
+                width: '141px',
+                render: function (data, type, row, meta) {
+                    let fullUrl = `/sources/img/demo/avatars/avatar-admin.png`;
 
-                return `<img src="${fullUrl}" class="img-circle elevation-2" style="width: 40px; height: 40px;">`;
+                    if (row.photo != null) {
+                        fullUrl = `/uploads/avatar/${row.photo}`;
+                    }
+
+                    return `<img src="${fullUrl}" class="img-circle elevation-2" style="width: 40px; height: 40px;">`;
+                }
+            },
+            {
+                data: 'id',
+                orderable: false,
+                searchable: false,
+                width: '110px',
+                render: function (data, type, row, meta) {
+                    let id = row.id;
+                    let title = `${row.userName} | ${row.fullName}`;
+                    let html = '';
+
+                    let editUrl = "/@ViewData["currentController"]/Edit/:id";
+                    editUrl = editUrl.replace(':id', id);
+
+                    let buttonActions = $("#tpl-button-actions").html();
+                    buttonActions = buttonActions.replace('PLACEHOLDER_LINK', editUrl);
+                    buttonActions = buttonActions.replace('PLACEHOLDER_DATA_ID', id);
+                    buttonActions = buttonActions.replace('PLACEHOLDER_DATA_TITLE', title);
+
+                    html += `${buttonActions}`
+                    return html;
+                }
             }
-        },
-        {
-            data: 'id',
-            orderable: false,
-            searchable: false,
-            width: '110px',
-            render: function (data, type, row, meta) {
-                let id = row.id;
-                let title = `${row.userName} | ${row.fullName}`;
-                let html = '';
-
-                let editUrl = "/@ViewData["currentController"]/Edit/:id";
-                editUrl = editUrl.replace(':id', id);
-
-                let buttonActions = $("#tpl-button-actions").html();
-                buttonActions = buttonActions.replace('PLACEHOLDER_LINK', editUrl);
-                buttonActions = buttonActions.replace('PLACEHOLDER_DATA_ID', id);
-                buttonActions = buttonActions.replace('PLACEHOLDER_DATA_TITLE', title);
-
-                html += `${buttonActions}`
-                return html;
-            }
-        }
         ];
     </script>
 }
