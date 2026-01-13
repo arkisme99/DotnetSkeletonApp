@@ -12,19 +12,17 @@ namespace DotnetSkeletonApp.Services
 {
     public class UserService(
         ApplicationDbContext _context,
-        UserManager<ApplicationUser> userManager,
-        ILogger<ApplicationUser> logger
-    ) : BaseCrudService<ApplicationUser, Guid>(
+        UserManager<ApplicationUser> userManager
+    ) : BaseCrudService<ApplicationUser, Guid, UserViewModel>(
         _context
     )
     {
         public readonly UserManager<ApplicationUser> _userManager = userManager;
-        public readonly ILogger<ApplicationUser> _logger = logger;
 
-        public override IQueryable<ApplicationUser> GetQueryAble()
+        public override IQueryable<UserViewModel> GetQueryAble()
         {
             // Ini seperti User::with('roles')->get() di Laravel
-            return _context.Set<ApplicationUser>()
+            return _context.Set<UserViewModel>()
                            .Include(u => u.UserRoles)
                            //   .ThenInclude(ur => ur.Role)
                            .AsQueryable();
@@ -37,16 +35,16 @@ namespace DotnetSkeletonApp.Services
             return data!;
         }
 
-        public async Task<UserViewModel> UpdateUserAsync(Guid id, UserViewModel applicationUser)
+        public async Task<ApplicationUser> UpdateUserAsync(Guid id, ApplicationUser applicationUser)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
-                var user = await _userManager.FindByIdAsync(id.ToString()!) ?? throw new Exception($"User not found");
+                /* var user = await _userManager.FindByIdAsync(id.ToString()!) ?? throw new Exception($"User not found");
 
                 //upload foto dahulu
-                var fileName = await ProcessUpload(applicationUser.Photo!, "avatar");
+                var fileName = await ProcessUpload(applicationUser.PhotoForm!, "avatar");
 
                 // Update hanya field yang diizinkan agar Password tidak hilang
                 user.UserName = applicationUser.UserName ?? applicationUser.Email;
@@ -64,7 +62,7 @@ namespace DotnetSkeletonApp.Services
                 }
 
                 var result = await _userManager.UpdateAsync(user);
-                _logger.LogInformation("Update User {user} Result: {Result}", user.Email, result.Succeeded ? "Success" : "Failed");
+                Console.WriteLine("Update User {user} Result: {Result}", user.Email, result.Succeeded ? "Success" : "Failed");
 
                 if (!result.Succeeded) throw new Exception("Failed to update user");
 
@@ -76,7 +74,7 @@ namespace DotnetSkeletonApp.Services
 
                     if (!passResult.Succeeded)
                         throw new Exception(string.Join(", ", passResult.Errors.Select(e => e.Description)));
-                }
+                } */
 
                 /*// sinkronisasi roles (clear + add ulang)
                 if (dto.Roles != null)
@@ -104,19 +102,19 @@ namespace DotnetSkeletonApp.Services
             }
         }
 
-        public async Task<UserViewModel> CreateUserAsync(UserViewModel applicationUser)
+        public async Task<ApplicationUser> CreateUserAsync(ApplicationUser applicationUser)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
                 // cek username unik
-                var existingUser = await _userManager.FindByNameAsync(applicationUser.UserName);
+                /* var existingUser = await _userManager.FindByNameAsync(applicationUser.UserName!);
                 if (existingUser != null)
                     throw new Exception("Username already exists");
 
                 //upload foto dahulu
-                var fileName = await ProcessUpload(applicationUser.Photo!, "avatar");
+                var fileName = await ProcessUpload(applicationUser.PhotoForm!, "avatar");
 
                 var user = new ApplicationUser
                 {
@@ -130,9 +128,9 @@ namespace DotnetSkeletonApp.Services
                 var adminPassword = applicationUser.Password;
 
                 var result = await _userManager.CreateAsync(user, adminPassword!);
-                _logger.LogInformation("Create User {user} Result: {Result}", user.Email, result.Succeeded ? "Success" : "Failed");
+                Console.Writeln("Create User {user} Result: {Result}", user.Email, result.Succeeded ? "Success" : "Failed");
 
-                if (!result.Succeeded) throw new Exception("Failed to create user");
+                if (!result.Succeeded) throw new Exception("Failed to create user"); */
 
                 /* if (applicationUser.Roles != null && applicationUser.Roles.Count > 0)
                 {

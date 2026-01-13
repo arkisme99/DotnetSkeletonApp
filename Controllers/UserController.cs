@@ -19,24 +19,15 @@ namespace DotnetSkeletonApp.Controllers
 {
     [Authorize]
     public class UserController(
-        ILogger<BaseCrudController<ApplicationUser, UserService, Guid>> _logger,
         UserService userService,
-        IStringLocalizer<SharedResource> localizer,
         SignInManager<ApplicationUser> signInManager,
-        IHttpContextAccessor httpContextAccessor,
-        IValidator<UserViewModel> validator
-    ) : BaseCrudController<ApplicationUser, UserService, Guid>(
-        _logger,
-        userService,
-        localizer
+        IHttpContextAccessor httpContextAccessor
+    ) : BaseCrudController<ApplicationUser, UserService, Guid, UserViewModel>(
+        userService
         )
     {
         public readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         public readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-
-        protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
-
-        private readonly IValidator<UserViewModel> _validator = validator;
 
         [HasPermission("View_User")]
         public override IActionResult Index() => base.Index();
@@ -48,7 +39,7 @@ namespace DotnetSkeletonApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(UserViewModel user)
         {
-            var validationResult = await _validator.ValidateAsync(user, options => options.IncludeRuleSets("Create", "default"));
+            /* var validationResult = await _validator.ValidateAsync(user, options => options.IncludeRuleSets("Create", "default"));
             if (!validationResult.IsValid)
             {
                 var errors = validationResult.Errors.Select(x => x.ErrorMessage);
@@ -56,7 +47,7 @@ namespace DotnetSkeletonApp.Controllers
                 TempData["Notify.Type"] = "error";
                 TempData["Notify.Message"] = string.Join(", ", errors);
                 return View("Create");
-            }
+            } */
 
             try
             {
@@ -64,7 +55,7 @@ namespace DotnetSkeletonApp.Controllers
                 await _service.CreateUserAsync(user);
 
                 TempData["Notify.Type"] = "success";
-                TempData["Notify.Message"] = _localizer["PesanTambahSukses"].Value;
+                // TempData["Notify.Message"] = _localizer["PesanTambahSukses"].Value;
                 return RedirectToAction(nameof(Index));
 
             }
@@ -103,7 +94,8 @@ namespace DotnetSkeletonApp.Controllers
 
             var viewModel = new UserViewModel
             {
-                Id = Guid.Parse(DataModel.Id),
+                // Id = Guid.Parse(DataModel.Id),
+                Id = DataModel.Id,
                 FullName = DataModel.FullName,
                 Email = DataModel.Email!,
                 UserName = DataModel.UserName ?? DataModel.Email!,
@@ -120,7 +112,7 @@ namespace DotnetSkeletonApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(Guid id, UserViewModel user)
         {
-            var validationResult = await _validator.ValidateAsync(user, options => options.IncludeRuleSets("Update", "default"));
+            /* var validationResult = await _validator.ValidateAsync(user, options => options.IncludeRuleSets("Update", "default"));
             if (!validationResult.IsValid)
             {
                 var errors = validationResult.Errors.Select(x => x.ErrorMessage);
@@ -128,7 +120,7 @@ namespace DotnetSkeletonApp.Controllers
                 TempData["Notify.Type"] = "error";
                 TempData["Notify.Message"] = string.Join(", ", errors);
                 return View("Edit", user);
-            }
+            } */
 
             try
             {
@@ -147,7 +139,7 @@ namespace DotnetSkeletonApp.Controllers
                 } */
 
                 TempData["Notify.Type"] = "success";
-                TempData["Notify.Message"] = _localizer["PesanUbahSukses"].Value;
+                // TempData["Notify.Message"] = _localizer["PesanUbahSukses"].Value;
                 return RedirectToAction(nameof(Index));
                 /*  }
                  else

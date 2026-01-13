@@ -14,7 +14,7 @@ namespace DotnetSkeletonApp.Validator
 
             RuleFor(x => x.UserName)
                 .NotEmpty();
-            RuleFor(x => x.Photo)
+            RuleFor(x => x.PhotoForm)
                 .IsValidImage();
 
             RuleSet("Create", () =>

@@ -26,6 +26,7 @@ namespace DotnetSkeletonApp.Services
 
             if (user == null) return false;
 
+            // Console.WriteLine("User found: {user}, Password Type : {password}", user.Email, password);
             // 🔹 cek password
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: false);
             if (!result.Succeeded) return false;

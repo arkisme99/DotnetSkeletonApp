@@ -6,24 +6,29 @@ using System.Threading.Tasks;
 using DotnetSkeletonApp.Helpers;
 using DotnetSkeletonApp.Models.ViewModels;
 using DotnetSkeletonApp.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
 namespace DotnetSkeletonApp.Controllers
 {
-    public abstract class BaseCrudController<TModel, TService, TKey>(
-        ILogger<BaseCrudController<TModel, TService, TKey>> logger,
-        TService service,
-        IStringLocalizer<SharedResource> _localizer
+    public abstract class BaseCrudController<TModel, TService, TKey, TViewModel>(
+        TService service
     ) : BaseController
         where TModel : class
-        where TService : BaseCrudService<TModel, TKey>
+        where TViewModel : class
+        where TService : BaseCrudService<TModel, TKey, TViewModel>
     {
-        protected virtual string ModelName => typeof(TModel).Name;
-        protected virtual string ControllerName => Request.RouteValues["controller"]?.ToString() ?? "";
         protected readonly TService _service = service;
-        protected readonly ILogger<BaseCrudController<TModel, TService, TKey>> _logger = logger;
-        // protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
+        protected readonly TViewModel? _tviewmodel;
+        private IValidator<TViewModel>? _validator;
+        protected IValidator<TViewModel> Validator =>
+            _validator ??= HttpContext.RequestServices.GetRequiredService<IValidator<TViewModel>>();
+        protected IStringLocalizer<SharedResource>? _localizer;
+        protected IStringLocalizer<SharedResource> Localizer =>
+        _localizer ??= HttpContext.RequestServices.GetRequiredService<IStringLocalizer<SharedResource>>();
+        protected virtual string ControllerName => Request.RouteValues["controller"]?.ToString() ?? "";
+        // protected virtual string ModelName => typeof(TModel).Name;
 
         public List<BreadcrumbsViewModel> GetBaseBreadcrumbs()
         {
@@ -40,7 +45,7 @@ namespace DotnetSkeletonApp.Controllers
             breadcrumbs.Last().Active = true;
             SetBreadcrumbs([.. breadcrumbs]);
 
-            _logger.LogInformation($"Masuk Ke Index {_service!.GetType().Name}");
+            // _logger.LogInformation($"Masuk Ke Index {_service!.GetType().Name}");
             return View();
         }
 
@@ -65,21 +70,30 @@ namespace DotnetSkeletonApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> Create(TModel tmodel)
+        public virtual async Task<IActionResult> Create(TModel tmodel, TViewModel viewModel)
         {
-            var RawFormData = Request.Form;
+            // var choosePermissions = Request.Form["choosePermissions[]"].ToList();
+            // Console.WriteLine("Choose ViewModel C: " + string.Join(", ", viewModel));
+
+            var validationResult = await Validator.ValidateAsync(viewModel, options => options.IncludeRuleSets("Create", "default"));
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(x => x.ErrorMessage);
+
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = string.Join(", ", errors);
+                return View("Create");
+            }
+
+            // var RawFormData = Request.Form;
             try
             {
-                if (ModelState.IsValid)
-                {
-                    // var choosePermissions = Request.Form["choosePermissions[]"].ToList();
-                    // Console.WriteLine("Choose Permissions: " + string.Join(", ", choosePermissions));
-                    await _service.CreateAsync(tmodel, RawFormData);
-                    TempData["Notify.Type"] = "success";
-                    TempData["Notify.Message"] = _localizer["PesanTambahSukses"].Value;
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(tmodel);
+
+                await _service.CreateAsync(tmodel, viewModel);
+                TempData["Notify.Type"] = "success";
+                TempData["Notify.Message"] = Localizer["PesanTambahSukses"].Value;
+                return RedirectToAction(nameof(Index));
+
             }
             catch (Exception ex)
             {
@@ -115,9 +129,20 @@ namespace DotnetSkeletonApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> Edit(TKey id, TModel tmodel)
+        public virtual async Task<IActionResult> Edit(TKey id, TModel tmodel, TViewModel viewmodel)
         {
-            var RawFormData = Request.Form;
+
+            var validationResult = await Validator.ValidateAsync(viewmodel, options => options.IncludeRuleSets("Update", "default"));
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(x => x.ErrorMessage);
+
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = string.Join(", ", errors);
+                return View("Create");
+            }
+
+            // var RawFormData = Request.Form;
             var modelId = (TKey)((dynamic)tmodel).Id;
             if (id == null || !id.Equals(modelId))
             {
@@ -126,10 +151,10 @@ namespace DotnetSkeletonApp.Controllers
 
             if (ModelState.IsValid)
             {
-                await _service.UpdateAsync(tmodel, RawFormData);
+                await _service.UpdateAsync(tmodel, viewmodel);
 
                 TempData["Notify.Type"] = "success";
-                TempData["Notify.Message"] = _localizer["PesanUbahSukses"].Value;
+                TempData["Notify.Message"] = Localizer["PesanUbahSukses"].Value;
                 return RedirectToAction(nameof(Index));
             }
             return View(tmodel);
@@ -144,7 +169,7 @@ namespace DotnetSkeletonApp.Controllers
                 await _service.DeleteAsync(Id);
 
                 TempData["Notify.Type"] = "info";
-                TempData["Notify.Message"] = _localizer["PesanHapusSukses"].Value;
+                TempData["Notify.Message"] = Localizer["PesanHapusSukses"].Value;
             }
             catch (Exception ex)
             {
@@ -168,12 +193,12 @@ namespace DotnetSkeletonApp.Controllers
                 if (deletedCount > 0)
                 {
                     TempData["Notify.Type"] = "success";
-                    TempData["Notify.Message"] = $"{deletedCount} Data {_localizer["PesanHapusSukses"].Value}";
+                    TempData["Notify.Message"] = $"{deletedCount} Data {Localizer["PesanHapusSukses"].Value}";
                 }
                 else
                 {
                     TempData["Notify.Type"] = "warning";
-                    TempData["Notify.Message"] = _localizer["PesanHapusBatal"].Value;
+                    TempData["Notify.Message"] = Localizer["PesanHapusBatal"].Value;
                 }
             }
             catch (Exception ex)

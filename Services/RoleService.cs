@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Data;
 using DotnetSkeletonApp.Models.UserModels;
+using DotnetSkeletonApp.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotnetSkeletonApp.Services
@@ -11,7 +12,7 @@ namespace DotnetSkeletonApp.Services
     public class RoleService(
         ApplicationDbContext _context,
         PermissionService permissionService
-    ) : BaseCrudService<ApplicationRole, string>(
+    ) : BaseCrudService<ApplicationRole, string, RoleViewModel>(
         _context
     )
     {
@@ -43,16 +44,19 @@ namespace DotnetSkeletonApp.Services
             };
         }
 
-        protected override async Task<ApplicationRole> AfterCreateAsync(ApplicationRole model, IFormCollection RawFormData)
+        // protected override async Task<RoleViewModel> AfterCreateAsync(RoleViewModel model, IFormCollection RawFormData)
+        protected override async Task<ApplicationRole> AfterCreateAsync(ApplicationRole model, RoleViewModel tviewmodel)
         {
 
-            var selectedPermissionNames = RawFormData!["choosePermissions[]"].ToList();
+            // var selectedPermissionNames = RawFormData!["choosePermissions[]"].ToList();
 
-            if (selectedPermissionNames != null && selectedPermissionNames.Count != 0)
+            // Console.WriteLine("Choose Permissions: " + string.Join(", ", tviewmodel.ChoosePermissions.Length));
+
+            if (tviewmodel.ChoosePermissions != null && tviewmodel.ChoosePermissions.Length != 0)
             {
 
                 var permissions = _context.Permissions
-                    .Where(p => selectedPermissionNames.Contains(p.Name))
+                    .Where(p => tviewmodel.ChoosePermissions.Contains(p.Name))
                     .ToList();
 
                 foreach (var perm in permissions)
@@ -76,9 +80,9 @@ namespace DotnetSkeletonApp.Services
             return model;
         }
 
-        protected override async Task<ApplicationRole> AfterUpdateAsync(ApplicationRole model, IFormCollection RawFormData)
+        protected override async Task<ApplicationRole> AfterUpdateAsync(ApplicationRole model, RoleViewModel Tviewmodel)
         {
-            var selectedPermissionNames = RawFormData!["choosePermissions[]"].ToList();
+            /* var selectedPermissionNames = RawFormData!["choosePermissions[]"].ToList();
 
             // Ambil permission lama
             var oldPermissionIds = await _context.RolePermissions
@@ -115,7 +119,7 @@ namespace DotnetSkeletonApp.Services
                 await _context.RolePermissions.AddRangeAsync(addEntities);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); */
 
             return model;
         }

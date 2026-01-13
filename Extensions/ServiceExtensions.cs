@@ -26,11 +26,12 @@ namespace DotnetSkeletonApp.Extensions
             services.AddScoped<RoleService>();
             services.AddScoped<PermissionService>();
             // services.AddScoped<IActivityLogService, ActivityLogService>();
-            services.AddFluentValidationAutoValidation();
+            // services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters();
             // 3. Daftarkan Validator Anda
             // services.AddValidatorsFromAssemblyContaining<UserValidator>();
             services.AddScoped<IValidator<UserViewModel>, UserValidator>();
+            services.AddScoped<IValidator<RoleViewModel>, RoleValidator>();
 
             return services;
         }

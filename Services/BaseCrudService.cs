@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotnetSkeletonApp.Services
 {
-    public class BaseCrudService<TModel, TKey>(
+    public class BaseCrudService<TModel, TKey, TViewModel>(
         ApplicationDbContext context
-    ) where TModel : class
+    )
+        where TModel : class
+        where TViewModel : class
     {
         protected readonly ApplicationDbContext _context = context;
 
@@ -58,22 +60,22 @@ namespace DotnetSkeletonApp.Services
             return data!;
         }
 
-        protected virtual async Task<TModel> BeforeCreateAsync(TModel model, IFormCollection RawFormData)
+        protected virtual async Task<TModel> BeforeCreateAsync(TModel model, TViewModel tviewmodel)
         {
             return model;
         }
 
-        protected virtual async Task<TModel> AfterCreateAsync(TModel model, IFormCollection RawFormData)
+        protected virtual async Task<TModel> AfterCreateAsync(TModel model, TViewModel tviewmodel)
         {
             return model;
         }
 
-        protected virtual async Task<TModel> BeforeUpdateAsync(TModel model, IFormCollection RawFormData)
+        protected virtual async Task<TModel> BeforeUpdateAsync(TModel model, TViewModel tviewmodel)
         {
             return model;
         }
 
-        protected virtual async Task<TModel> AfterUpdateAsync(TModel model, IFormCollection RawFormData)
+        protected virtual async Task<TModel> AfterUpdateAsync(TModel model, TViewModel tviewmodel)
         {
             return model;
         }
@@ -88,18 +90,19 @@ namespace DotnetSkeletonApp.Services
             return model;
         }
 
-        public virtual async Task<TModel> CreateAsync(TModel tmodel, IFormCollection RawFormData)
+        // public virtual async Task<TModel> CreateAsync(TModel tmodel, IFormCollection RawFormData)
+        public virtual async Task<TModel> CreateAsync(TModel tmodel, TViewModel tviewmodel)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
-                tmodel = await BeforeCreateAsync(tmodel, RawFormData);
+                tmodel = await BeforeCreateAsync(tmodel, tviewmodel);
 
                 _context.Set<TModel>().Add(tmodel);
                 await _context.SaveChangesAsync();
 
-                tmodel = await AfterCreateAsync(tmodel, RawFormData);
+                tmodel = await AfterCreateAsync(tmodel, tviewmodel);
 
                 await transaction.CommitAsync();
                 return tmodel;
@@ -111,18 +114,18 @@ namespace DotnetSkeletonApp.Services
             }
         }
 
-        public virtual async Task<TModel> UpdateAsync(TModel tmodel, IFormCollection RawFormData)
+        public virtual async Task<TModel> UpdateAsync(TModel tmodel, TViewModel tviewmodel)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
-                tmodel = await BeforeUpdateAsync(tmodel, RawFormData);
+                tmodel = await BeforeUpdateAsync(tmodel, tviewmodel);
 
                 _context.Set<TModel>().Update(tmodel);
                 await _context.SaveChangesAsync();
 
-                tmodel = await AfterUpdateAsync(tmodel, RawFormData);
+                tmodel = await AfterUpdateAsync(tmodel, tviewmodel);
 
                 await transaction.CommitAsync();
                 return tmodel;

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using DotnetSkeletonApp.Helpers.Authorization;
 using DotnetSkeletonApp.Models;
 using DotnetSkeletonApp.Models.UserModels;
+using DotnetSkeletonApp.Models.ViewModels;
 using DotnetSkeletonApp.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -15,13 +17,9 @@ namespace DotnetSkeletonApp.Controllers
 {
     [Authorize]
     public class RoleController(
-        ILogger<BaseCrudController<ApplicationRole, RoleService, string>> logger,
-        RoleService roleService,
-        IStringLocalizer<SharedResource> _localizer
-    ) : BaseCrudController<ApplicationRole, RoleService, string>(
-        logger,
-        roleService,
-        _localizer
+        RoleService roleService
+    ) : BaseCrudController<ApplicationRole, RoleService, string, RoleViewModel>(
+        roleService
         )
     {
         [HasPermission("View_Role")]
