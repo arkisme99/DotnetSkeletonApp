@@ -1,5 +1,72 @@
-﻿@{
+﻿@using DotnetSkeletonApp.Models.ViewModels
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@model UserViewModel
+
+@{
     Layout = "Crud/_CCreate";
+
+    ViewData["actionForm"] = "CreateUser";
+    ViewData["attributeForm"] = "multipart/form-data";
+
+    var inputGroupEmail = new InputGroupViewModel
+    {
+        Label = @Localizer["Username"],
+        Type = "email",
+        Name = "UserName",
+        Id = "UserName",
+        PlaceHolder = @Localizer["Enter your UserName"],
+        Attributes = $"value=\"\" autofocus required",
+        Icon = "fal fa-envelope"
+    };
+
+    var inputGroupFullname = new InputGroupViewModel
+    {
+        Label = @Localizer["Full Name"],
+        Name = "FullName",
+        Id = "FullName",
+        PlaceHolder = @Localizer["Enter your full name"],
+        Attributes = $"value=\"\" required",
+        Icon = "fal fa-user"
+    };
+
+    var inputGroupPhoneNumber = new InputGroupViewModel
+    {
+        Label = @Localizer["Phone Number"],
+        Name = "PhoneNumber",
+        Id = "PhoneNumber",
+        PlaceHolder = @Localizer["Enter your phone number"],
+        Attributes = $"value=\"\"",
+        Icon = "fal fa-phone"
+    };
+
+    var inputGroupPassword = new InputGroupViewModel
+    {
+        Label = @Localizer["Password"],
+        Type = "password",
+        Name = "Password",
+        Id = "Password",
+        PlaceHolder = @Localizer["Enter your password"],
+        Attributes = "required",
+        Icon = "show-password-toggle fal fa-eye",
+        DataTargetIcon = "#Password"
+    };
+
+    var inputImage = new InputImageViewModel
+    {
+        Label = @Localizer["Photo Profile"],
+        Name = "Photo",
+        Id = "Photo",
+        Attributes = "",
+    };
 }
 
-<h3>Create User</h3>
+@await Html.PartialAsync("Components/_InputGroup", inputGroupEmail)
+@await Html.PartialAsync("Components/_InputGroup", inputGroupFullname)
+@await Html.PartialAsync("Components/_InputGroup", inputGroupPhoneNumber)
+@await Html.PartialAsync("Components/_InputImage", inputImage)
+@await Html.PartialAsync("Components/_InputGroup", inputGroupPassword)
+
+@section Scripts {
+    <script src="~/helpers/js/showpassword.js"></script>
+}

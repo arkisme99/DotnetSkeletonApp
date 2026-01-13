@@ -103,5 +103,55 @@ namespace DotnetSkeletonApp.Services
                 throw;
             }
         }
+
+        public async Task<UserViewModel> CreateUserAsync(UserViewModel applicationUser)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // cek username unik
+                var existingUser = await _userManager.FindByNameAsync(applicationUser.UserName);
+                if (existingUser != null)
+                    throw new Exception("Username already exists");
+
+                //upload foto dahulu
+                var fileName = await ProcessUpload(applicationUser.Photo!, "avatar");
+
+                var user = new ApplicationUser
+                {
+                    UserName = applicationUser.UserName,
+                    FullName = applicationUser.FullName,
+                    Email = applicationUser.Email ?? applicationUser.UserName,
+                    EmailConfirmed = true,
+                    Photo = fileName
+                };
+
+                var adminPassword = applicationUser.Password;
+
+                var result = await _userManager.CreateAsync(user, adminPassword!);
+                _logger.LogInformation("Create User {user} Result: {Result}", user.Email, result.Succeeded ? "Success" : "Failed");
+
+                if (!result.Succeeded) throw new Exception("Failed to create user");
+
+                /* if (applicationUser.Roles != null && applicationUser.Roles.Count > 0)
+                {
+                    foreach (var role in applicationUser.Roles)
+                    {
+                        var roleEntity = await roleManager.FindByIdAsync(role) ?? throw new Exception($"Role with id {role} does not exist");
+                        await userManager.AddToRoleAsync(user, roleEntity.Name!);
+                    }
+                } */
+
+                await transaction.CommitAsync();
+
+                return applicationUser;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 }

@@ -14,6 +14,8 @@ name='datahapus' id='datahapus' value=''> ");
     var idModalMultiDelete = new ViewDataDictionary(ViewData) { {"ModalId","modal-multidelete" }, { "FormId",
 "formHapusMulti" } };
 
+    var isMultiDelete = ViewData["IsMultiDelete"] as bool? ?? false;
+
 }
 
 <div class="table-responsive">
@@ -35,7 +37,10 @@ name='datahapus' id='datahapus' value=''> ");
 @section PanelToolbar {
     @await Html.PartialAsync("Components/_ButtonCreate")
     &nbsp;
-    @await Html.PartialAsync("Components/_ButtonMultiDelete")
+    @if (isMultiDelete)
+    {
+        @await Html.PartialAsync("Components/_ButtonMultiDelete")
+    }
     &nbsp;
     @await Html.PartialAsync("Components/_ButtonAdditional")
 }

@@ -11,17 +11,26 @@ namespace DotnetSkeletonApp.Validator
     {
         public UserValidator()
         {
+
             RuleFor(x => x.UserName)
                 .NotEmpty();
-
-            RuleFor(x => x.FullName)
-                .NotEmpty();
-            // .WithMessage("Nama tidak boleh kosong");
-
-            // Validasi khusus untuk upload file
             RuleFor(x => x.Photo)
                 .IsValidImage();
-            // .WithMessage("Silakan pilih foto")
+
+            RuleSet("Create", () =>
+            {
+                RuleFor(x => x.Password)
+                    .NotEmpty()
+                    .MinimumLength(6);
+            });
+
+            // Rule khusus untuk Update (Opsional)
+            RuleSet("Update", () =>
+            {
+                RuleFor(x => x.Password)
+                    .MinimumLength(6).When(x => !string.IsNullOrEmpty(x.Password));
+            });
+
         }
     }
 }

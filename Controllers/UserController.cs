@@ -9,6 +9,7 @@ using DotnetSkeletonApp.Models;
 using DotnetSkeletonApp.Models.UserModels;
 using DotnetSkeletonApp.Models.ViewModels;
 using DotnetSkeletonApp.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,8 @@ namespace DotnetSkeletonApp.Controllers
         UserService userService,
         IStringLocalizer<SharedResource> localizer,
         SignInManager<ApplicationUser> signInManager,
-        IHttpContextAccessor httpContextAccessor
+        IHttpContextAccessor httpContextAccessor,
+        IValidator<UserViewModel> validator
     ) : BaseCrudController<ApplicationUser, UserService, Guid>(
         _logger,
         userService,
@@ -34,10 +36,45 @@ namespace DotnetSkeletonApp.Controllers
 
         protected readonly IStringLocalizer<SharedResource> _localizer = localizer;
 
+        private readonly IValidator<UserViewModel> _validator = validator;
+
         [HasPermission("View_User")]
         public override IActionResult Index() => base.Index();
         [HasPermission("Create_User")]
         public override async Task<IActionResult> Create() => await base.Create();
+
+        [HasPermission("Create_User")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(UserViewModel user)
+        {
+            var validationResult = await _validator.ValidateAsync(user, options => options.IncludeRuleSets("Create", "default"));
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(x => x.ErrorMessage);
+
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = string.Join(", ", errors);
+                return View("Create");
+            }
+
+            try
+            {
+
+                await _service.CreateUserAsync(user);
+
+                TempData["Notify.Type"] = "success";
+                TempData["Notify.Message"] = _localizer["PesanTambahSukses"].Value;
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+        }
         protected override Dictionary<string, Expression<Func<ApplicationUser, object>>> GetColumnMap()
         {
             return new Dictionary<string, Expression<Func<ApplicationUser, object>>>
@@ -68,7 +105,7 @@ namespace DotnetSkeletonApp.Controllers
             {
                 Id = Guid.Parse(DataModel.Id),
                 FullName = DataModel.FullName,
-                Email = DataModel.Email,
+                Email = DataModel.Email!,
                 UserName = DataModel.UserName ?? DataModel.Email!,
                 PhoneNumber = DataModel.PhoneNumber,
                 ExistingPhotoPath = DataModel.Photo
@@ -83,9 +120,19 @@ namespace DotnetSkeletonApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(Guid id, UserViewModel user)
         {
-            // if (id.ToString() != user.Id) return NotFound();
+            var validationResult = await _validator.ValidateAsync(user, options => options.IncludeRuleSets("Update", "default"));
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(x => x.ErrorMessage);
+
+                TempData["Notify.Type"] = "error";
+                TempData["Notify.Message"] = string.Join(", ", errors);
+                return View("Edit", user);
+            }
+
             try
             {
+
                 /* if (ModelState.IsValid)
                 { */
                 // _logger.LogInformation($"Masuk Ke Editx : {user.FullName}");

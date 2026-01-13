@@ -21,5 +21,5 @@
                                                      $"data-target={dataTargetIcon}")></span>
         </span>
     </div>
-    <div class="invalid-feedback">@Localizer["No, you missed this one"].</div>
+    <div asp-validation-for="@Model.Name" class="invalid-feedback">@Localizer["No, you missed this one"].</div>
 </div>
