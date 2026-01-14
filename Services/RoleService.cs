@@ -48,7 +48,7 @@ namespace DotnetSkeletonApp.Services
         {
             model.NormalizedName = model.Name!.ToUpperInvariant();
             // Console.WriteLine($"Masuk Role {model.Name}, NormalizedName {model.NormalizedName}");
-            return model;
+            return await Task.FromResult(model);
 
         }
 
@@ -92,7 +92,7 @@ namespace DotnetSkeletonApp.Services
         {
             model.NormalizedName = model.Name!.ToUpperInvariant();
             // Console.WriteLine($"Masuk Role {model.Name}, NormalizedName {model.NormalizedName}");
-            return model;
+            return await Task.FromResult(model);
 
         }
 

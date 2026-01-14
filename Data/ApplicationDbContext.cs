@@ -28,6 +28,7 @@ namespace DotnetSkeletonApp.Data
         public DbSet<ActivityLog> ActivityLogs { get; set; }
 
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Setup> Setups { get; set; }
 
 
         public override Task<int> SaveChangesAsync(
