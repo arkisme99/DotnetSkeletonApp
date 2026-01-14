@@ -25,7 +25,7 @@ namespace DotnetSkeletonApp.Controllers
         ActionExecutionDelegate next
         )
         {
-            var userService = context.HttpContext.RequestServices.GetService(typeof(UserService)) as UserService;
+            var setupService = context.HttpContext.RequestServices.GetService(typeof(SetupService)) as SetupService;
 
             await next();
 
@@ -48,8 +48,18 @@ namespace DotnetSkeletonApp.Controllers
                 response.Cookies.Delete("notify_error");
             }
 
+            var setup = setupService!.GetAllData().Result.FirstOrDefault() ?? null;
+
             var nameApp = "Skeleton Dotnet App";
-            var logoPath = "/sources/img/favicon/fav.png";
+            var logoPath = "";
+
+            if (setup != null)
+            {
+                nameApp = setup.NameApp;
+                logoPath = (setup.LogoApp != null) ? $"/uploads/apps/{setup.LogoApp}" : "/sources/img/favicon/fav.png";
+            }
+
+
             var planApp = "Premium";
             var versiApp = "1.0.1";
 

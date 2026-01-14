@@ -125,6 +125,7 @@ namespace DotnetSkeletonApp.Services
 
             try
             {
+
                 tmodel = await BeforeUpdateAsync(tmodel, tviewmodel);
 
                 _context.Set<TModel>().Update(tmodel);

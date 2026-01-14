@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotnetSkeletonApp.Helpers.Authorization;
+using DotnetSkeletonApp.Models;
 using DotnetSkeletonApp.Models.ViewModels;
 using DotnetSkeletonApp.Services;
 using DotnetSkeletonApp.Services.Recaptcha;
@@ -33,6 +34,7 @@ namespace DotnetSkeletonApp.Extensions
             // services.AddValidatorsFromAssemblyContaining<UserValidator>();
             services.AddScoped<IValidator<UserViewModel>, UserValidator>();
             services.AddScoped<IValidator<RoleViewModel>, RoleValidator>();
+            services.AddScoped<IValidator<Setup>, SetupValidator>();
 
             return services;
         }

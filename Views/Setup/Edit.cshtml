@@ -1,0 +1,57 @@
+﻿@using DotnetSkeletonApp.Models
+@using DotnetSkeletonApp.Models.ViewModels
+@using Microsoft.AspNetCore.Html
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<SharedResource> Localizer
+@model Setup
+@{
+    Layout = "Crud/_CEdit";
+
+    ViewData["routeId"] = Model.Id;
+    ViewData["attributeForm"] = "multipart/form-data";
+
+
+    var inputGroupNameApp = new InputGroupViewModel
+    {
+        Label = @Localizer["Name"],
+        Name = "NameApp",
+        Id = "NameApp",
+        PlaceHolder = @Localizer["Enter a Name Application"],
+        Attributes = $"value=\"{Model.NameApp}\" autofocus required maxlength=\"100\"",
+        Icon = "fal fa-building"
+    };
+
+    var inputGroupPhone = new InputGroupViewModel
+    {
+        Label = @Localizer["Phone Number"],
+        Name = "Phone",
+        Id = "Phone",
+        PlaceHolder = @Localizer["Enter your phone number"],
+        Attributes = $"value=\"{Model.Phone}\"",
+        Icon = "fal fa-phone"
+    };
+
+    var textareaAddress = new TextareaViewModel
+    {
+        Label = @Localizer["Address"],
+        Name = "Address",
+        Id = "Address",
+        Value = Model.Address,
+        PlaceHolder = @Localizer["Enter a Address"]
+    };
+
+    var inputLogoApp = new InputImageViewModel
+    {
+        Label = @Localizer["Logo"],
+        Name = "LogoForm",
+        Id = "LogoForm",
+        Attributes = "",
+    };
+}
+
+@await Html.PartialAsync("Components/_InputGroup", inputGroupNameApp)
+@await Html.PartialAsync("Components/_InputGroup", inputGroupPhone)
+@await Html.PartialAsync("Components/_InputImage", inputLogoApp)
+@await Html.PartialAsync("Components/_Textarea", textareaAddress)
+<input type="hidden" asp-for="LogoApp" value="@Model.LogoApp" />

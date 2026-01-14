@@ -31,7 +31,13 @@
                 data: 'logoApp',
                 width: '141px',
                 render: function (data, type, row, meta) {
-                    return `${row.logoApp}`;
+                    let fullUrl = `/sources/img/favicon/fav.png`;
+
+                    if (row.logoApp != null) {
+                        fullUrl = `/uploads/apps/${row.logoApp}`;
+                    }
+
+                    return `<img src="${fullUrl}" class="img-circle elevation-2" style="width: 140px; height: 140px;">`;
                 }
             },
             {

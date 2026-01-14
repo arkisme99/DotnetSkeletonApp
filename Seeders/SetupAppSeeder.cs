@@ -16,15 +16,13 @@ namespace DotnetSkeletonApp.Seeders
             var dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
             var nameApp = "Skeleton Dotnet App";
-            var logoPath = "/sources/img/favicon/fav.png";
 
             if (!await dbContext.Setups.AnyAsync())
             {
                 var newSetup = new Setup
                 {
                     // Id = Guid.NewGuid(), // Karena Anda menggunakan Guid
-                    NameApp = nameApp,
-                    LogoApp = logoPath
+                    NameApp = nameApp
                 };
 
                 await dbContext.Setups.AddAsync(newSetup);
