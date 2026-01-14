@@ -25,6 +25,7 @@ namespace DotnetSkeletonApp.Extensions
             services.AddScoped<UserService>();
             services.AddScoped<RoleService>();
             services.AddScoped<PermissionService>();
+            services.AddScoped<SetupService>();
             // services.AddScoped<IActivityLogService, ActivityLogService>();
             // services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters();

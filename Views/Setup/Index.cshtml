@@ -1,0 +1,75 @@
+@{
+    Layout = "Crud/_CTable";
+    ViewData["IdTable"] = "tableSetup";
+    ViewData["OrderColumn"] = 0;
+
+}
+
+<thead>
+    <tr>
+        <th width="15%">Name App</th>
+        <th width="15%">Logo</th>
+        <th width="10%">Phone</th>
+        <th width="20%">Address</th>
+        <th width="10%">Actions</th>
+    </tr>
+</thead>
+<tbody>
+</tbody>
+
+@section Scripts {
+    <script>
+        let columns = [
+            {
+                data: 'nameApp',
+                width: '141px',
+                render: function (data, type, row, meta) {
+                    return `${row.nameApp}`;
+                }
+            },
+            {
+                data: 'logoApp',
+                width: '141px',
+                render: function (data, type, row, meta) {
+                    return `${row.logoApp}`;
+                }
+            },
+            {
+                data: 'phone',
+                width: '141px',
+                render: function (data, type, row, meta) {
+                    return `${row.phone}`;
+                }
+            },
+            {
+                data: 'address',
+                width: '141px',
+                render: function (data, type, row, meta) {
+                    return `${row.address}`;
+                }
+            },
+            {
+                data: 'id',
+                orderable: false,
+                searchable: false,
+                width: '110px',
+                render: function (data, type, row, meta) {
+                    let id = row.id;
+                    let title = `${row.nameApp}`;
+                    let html = '';
+
+                    let editUrl = "/@ViewData["currentController"]/Edit/:id";
+                    editUrl = editUrl.replace(':id', id);
+
+                    let buttonActions = $("#tpl-button-actions").html();
+                    buttonActions = buttonActions.replace('PLACEHOLDER_LINK', editUrl);
+                    buttonActions = buttonActions.replace('PLACEHOLDER_DATA_ID', id);
+                    buttonActions = buttonActions.replace('PLACEHOLDER_DATA_TITLE', title);
+
+                    html += `${buttonActions}`
+                    return html;
+                }
+            }
+        ];
+    </script>
+}
