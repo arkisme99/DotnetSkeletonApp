@@ -42,6 +42,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     // Jalankan identity seeder
     await IdentitySeeder.SeedAsync(services);
+    await SetupAppPermissionSeeder.SeedAsync(services);
 }
 
 // Configure the HTTP request pipeline.

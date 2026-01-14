@@ -65,32 +65,32 @@ namespace DotnetSkeletonApp.Services
 
         protected virtual async Task<TModel> BeforeCreateAsync(TModel model, TViewModel tviewmodel)
         {
-            return model;
+            return await Task.FromResult(model);
         }
 
         protected virtual async Task<TModel> AfterCreateAsync(TModel model, TViewModel tviewmodel)
         {
-            return model;
+            return await Task.FromResult(model);
         }
 
         protected virtual async Task<TModel> BeforeUpdateAsync(TModel model, TViewModel tviewmodel)
         {
-            return model;
+            return await Task.FromResult(model);
         }
 
         protected virtual async Task<TModel> AfterUpdateAsync(TModel model, TViewModel tviewmodel)
         {
-            return model;
+            return await Task.FromResult(model);
         }
 
         protected virtual async Task<TModel> BeforeDeleteAsync(TModel model)
         {
-            return model;
+            return await Task.FromResult(model);
         }
 
         protected virtual async Task<TModel> AfterDeleteAsync(TModel model)
         {
-            return model;
+            return await Task.FromResult(model);
         }
 
         // public virtual async Task<TModel> CreateAsync(TModel tmodel, IFormCollection RawFormData)
