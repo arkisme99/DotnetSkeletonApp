@@ -5,10 +5,8 @@
 @{
     Layout = "Crud/_CEdit";
 
-    ViewData["actionForm"] = "EditUser";
     ViewData["routeId"] = Model.Id;
     ViewData["attributeForm"] = "multipart/form-data";
-
 
     var inputGroupEmail = new InputGroupViewModel
     {
@@ -56,8 +54,8 @@
     var inputImage = new InputImageViewModel
     {
         Label = @Localizer["Photo Profile"],
-        Name = "Photo",
-        Id = "Photo",
+        Name = "PhotoForm",
+        Id = "PhotoForm",
         Attributes = "",
     };
 
@@ -87,23 +85,25 @@
     <script src="~/helpers/js/select2-ajax.js"></script>
     <script>
         $(function () {
+            var getRoleByidUserAsync = @Html.Raw(Json.Serialize(ViewData["getRoleByidUserAsync"]));
+
             handleSelect({
                 idSelect: '#DataRoles',
                 url: "/Role/GetSelect",
                 placeholder: "Choose Roles",
             });
 
-            @* $("#DataRoles").val('712d5a7c-46b9-4da8-b2d6-6dafc15b9128').trigger('change') *@
+            if (getRoleByidUserAsync && getRoleByidUserAsync.length > 0) {
+                getRoleByidUserAsync.forEach(function (item) {
 
-                // 1. Definisikan ID dan Nama yang ingin ditampilkan (biasanya dari database)
-                var idTerpilih = '712d5a7c-46b9-4da8-b2d6-6dafc15b9128';
-            var namaTerpilih = 'Admin'; // Ganti dengan nama role yang sesuai
+                    var idTerpilih = item.Id || item.id;
+                    var namaTerpilih = item.Text || item.text;
 
-            // 2. Buat elemen option secara manual (params: text, id, defaultSelected, selected)
-            var newOption = new Option(namaTerpilih, idTerpilih, true, true);
+                    var newOption = new Option(namaTerpilih, idTerpilih, true, true);
+                    $('#DataRoles').append(newOption).trigger('change');
+                });
+            }
 
-            // 3. Masukkan ke select2 dan trigger perubahan
-            $('#DataRoles').append(newOption).trigger('change');
         });
     </script>
 }

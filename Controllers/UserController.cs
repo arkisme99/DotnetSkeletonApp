@@ -57,8 +57,6 @@ namespace DotnetSkeletonApp.Controllers
             var DataModel = await _service.GetByIdAsync(Id);
             if (DataModel == null) return NotFound();
 
-            var userRoles = await _service.GetRoleByidUserAsync(Id);
-
             var viewModel = new UserViewModel
             {
                 // Id = Guid.Parse(DataModel.Id),
@@ -66,10 +64,18 @@ namespace DotnetSkeletonApp.Controllers
                 FullName = DataModel.FullName,
                 Email = DataModel.Email!,
                 UserName = DataModel.UserName ?? DataModel.Email!,
-                PhoneNumber = DataModel.PhoneNumber,
-                Photo = DataModel.Photo,
-                DataRoles = userRoles
+                PhoneNumber = DataModel.PhoneNumber
+                // PhotoForm = DataModel.Photo.ToString()
             };
+
+            // AMBIL DATA DARI SERVICE
+            var extraData = await _service.EditData(Id);
+
+            // Pindahkan isi dictionary ke ViewData agar bisa diakses langsung di View
+            foreach (var item in extraData)
+            {
+                ViewData[item.Key] = item.Value;
+            }
 
             return View(viewModel);
         }

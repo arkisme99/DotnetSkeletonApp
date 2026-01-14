@@ -32,6 +32,9 @@ namespace DotnetSkeletonApp.Services
                     FullName = u.FullName!,
                     UserName = u.UserName!,
                     Email = u.Email!,
+                    Photo = u.Photo!,
+                    CreatedAt = u.CreatedAt!,
+                    UpdatedAt = u.UpdatedAt!,
                     // Builder Anda akan memicu SQL JOIN di sini:
                     RoleNames = (from ur in context.UserRoles
                                  join r in context.Roles on ur.RoleId equals r.Id
@@ -106,22 +109,52 @@ namespace DotnetSkeletonApp.Services
             }
         }
 
-        public async Task<ApplicationUser> UpdateUserAsync(Guid id, ApplicationUser applicationUser)
+        public override async Task<Dictionary<string, object>> EditData(string Id)
+        {
+            var getRoleByidUserAsync = await GetRoleByidUserAsync(Id);
+
+            return new Dictionary<string, object>
+            {
+                { "getRoleByidUserAsync", getRoleByidUserAsync }
+            };
+        }
+
+        public async Task<SelectTwoViewModel[]> GetRoleByidUserAsync(string id)
+        {
+            // var user = await userManager.FindByIdAsync(id);
+
+            var roles = await _context.UserRoles
+                .Where(ur => ur.UserId == id)
+                .Join(_context.Roles,
+                    ur => ur.RoleId,
+                    r => r.Id,
+                    (ur, r) => new SelectTwoViewModel
+                    {
+                        Id = r.Id,
+                        Text = r.Name!
+                    })
+                .ToArrayAsync();
+
+            return roles;
+        }
+
+
+        public override async Task<ApplicationUser> UpdateAsync(ApplicationUser applicationUser, UserViewModel tviewmodel)
         {
             using var transaction = await context.Database.BeginTransactionAsync();
 
             try
             {
-                /* var user = await _userManager.FindByIdAsync(id.ToString()!) ?? throw new Exception($"User not found");
+                var user = await userManager.FindByIdAsync(tviewmodel.Id) ?? throw new Exception($"User not found");
 
                 //upload foto dahulu
-                var fileName = await ProcessUpload(applicationUser.PhotoForm!, "avatar");
+                var fileName = await ProcessUpload(tviewmodel.PhotoForm!, "avatar");
 
                 // Update hanya field yang diizinkan agar Password tidak hilang
-                user.UserName = applicationUser.UserName ?? applicationUser.Email;
-                user.Email = applicationUser.Email;
-                user.FullName = applicationUser.FullName;
-                user.PhoneNumber = applicationUser.PhoneNumber;
+                user.UserName = tviewmodel.UserName;
+                user.Email = tviewmodel.UserName;
+                user.FullName = tviewmodel.FullName;
+                user.PhoneNumber = tviewmodel.PhoneNumber;
 
                 if (fileName != null)
                 {
@@ -132,35 +165,35 @@ namespace DotnetSkeletonApp.Services
                     user.Photo = fileName;
                 }
 
-                var result = await _userManager.UpdateAsync(user);
-                Console.WriteLine("Update User {user} Result: {Result}", user.Email, result.Succeeded ? "Success" : "Failed");
+                var result = await userManager.UpdateAsync(user);
+                Console.WriteLine($"Update User {user.UserName} Result: {result.Succeeded};");
 
                 if (!result.Succeeded) throw new Exception("Failed to update user");
 
                 // update password jika ada
-                if (!string.IsNullOrWhiteSpace(applicationUser.Password))
+                if (!string.IsNullOrWhiteSpace(tviewmodel.Password))
                 {
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var passResult = await _userManager.ResetPasswordAsync(user, token, applicationUser.Password);
+                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                    var passResult = await userManager.ResetPasswordAsync(user, token, tviewmodel.Password);
 
                     if (!passResult.Succeeded)
                         throw new Exception(string.Join(", ", passResult.Errors.Select(e => e.Description)));
-                } */
+                }
 
-                /*// sinkronisasi roles (clear + add ulang)
-                if (dto.Roles != null)
+                // sinkronisasi roles (clear + add ulang)
+                if (tviewmodel.DataRoles != null && tviewmodel.DataRoles.Length != 0)
                 {
                     var currentRoles = await userManager.GetRolesAsync(user);
                     var removeResult = await userManager.RemoveFromRolesAsync(user, currentRoles);
                     if (!removeResult.Succeeded)
                         throw new Exception("Failed to clear old roles");
 
-                    foreach (var role in dto.Roles)
+                    foreach (var role in tviewmodel.DataRoles!)
                     {
                         var roleEntity = await roleManager.FindByIdAsync(role) ?? throw new Exception($"Role with id {role} does not exist");
                         await userManager.AddToRoleAsync(user, roleEntity.Name!);
                     }
-                } */
+                }
 
                 await transaction.CommitAsync();
 
@@ -172,19 +205,6 @@ namespace DotnetSkeletonApp.Services
                 throw;
             }
         }
-
-        public async Task<string[]> GetRoleByidUserAsync(string id)
-        {
-            // var user = await userManager.FindByIdAsync(id);
-
-            var roles = await _context.UserRoles
-                .Where(ur => ur.UserId == id)
-                .Select(ur => ur.RoleId)
-                .ToArrayAsync();
-
-            return roles;
-        }
-
 
     }
 }
